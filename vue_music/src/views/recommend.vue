@@ -5,8 +5,13 @@
 </template>
 
 <script>
+  import { getBanner } from '@/service/banner'
   export default {
-    name: 'recommend'
+    name: 'recommend',
+    async created() {
+      const result = await getBanner()
+      console.log(result)
+    }
   }
 </script>
 
