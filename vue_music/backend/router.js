@@ -22,7 +22,7 @@ function registerbanner(app){
       if(data.code===ERR_OK) {
         const banners=data.banners
         const sliders = []
-        for(let i = 0;i<5;i++){
+        for(let i = 0;i<6;i++){
           let sliderItem = {}
           sliderItem.pic=banners[i].pic
           sliderItem.url=banners[i].url

@@ -6,9 +6,9 @@
         v-for="item in sliders"
         :key="item.pic"
       >
-        <!-- <a :href="item.url"> -->
+        <a :href="item.pic">
           <img :src="item.pic"/>
-        <!-- </a> -->
+        </a>
       </div>
     </div>
     <!-- 有几个配置就显示几个点 -->
@@ -38,8 +38,9 @@
       }
     },
     setup() {
-      const rootRef=ref(null)
-      const {currentPageIndex}= useSlider(rootRef)
+      const rootRef = ref(null)
+      const { currentPageIndex } = useSlider(rootRef)
+      console.log(rootRef)
       return {
         rootRef,
         currentPageIndex
