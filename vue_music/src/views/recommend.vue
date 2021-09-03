@@ -1,40 +1,44 @@
 <template>
-  <div>
-    <div class="recommend">
-      <div class="slider-wrapper">
-        <div class="slider-content">
-          <slider v-if="sliders.length" :sliders="sliders"></slider>
+  <div class="recommend">
+    <scroll class="recommend-content">
+      <div>
+        <div class="slider-wrapper">
+          <div class="slider-content">
+            <slider v-if="sliders.length" :sliders="sliders"></slider>
+          </div>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li v-for="item in albums" class="item" :key="item.id">
+              <div class="icon">
+                <img width="60" height="60" :src="item.pic" />
+              </div>
+              <div class="text">
+                <h2 class="name">
+                  {{ item.username }}
+                </h2>
+                <p class="title">
+                  {{ item.title }}
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul v-if="albums.length">
-          <li v-for="item in albums" class="item" :key="item.id">
-            <div class="icon">
-              <img width="60" height="60" :src="item.pic" />
-            </div>
-            <div class="text">
-              <h2 class="name">
-                {{ item.username }}
-              </h2>
-              <p class="title">
-                {{ item.title }}
-              </p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
 import { getBanner, getPlaylist } from "@/service/recommend";
 import Slider from "@/components/base/slider/slider";
+import Scroll from "@/components/base/scroll/scroll";
 export default {
   name: "recommend",
   components: {
     Slider,
+    Scroll,
   },
   data() {
     return {
@@ -60,61 +64,61 @@ export default {
   width: 100%;
   top: 88px;
   bottom: 0;
+  // 实现滚动
   overflow: scroll;
-  // .recommend-content {
-
-  // height: 100%;
-  // overflow: hidden;
-  .slider-wrapper {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-top: 40%;
+  .recommend-content {
+    height: 100%;
     overflow: hidden;
-    .slider-content {
-      position: absolute;
-      left: 0;
-      top: 0;
+    .slider-wrapper {
+      position: relative;
       width: 100%;
-      height: 100%;
-    }
-  }
-  .recommend-list {
-    .list-title {
-      height: 50px;
-      line-height: 50px;
-      text-align: center;
-      font-size: 10px;
-      color: yellow;
-    }
-    .item {
-      display: flex;
-      box-sizing: border-box;
-      align-items: center;
-      padding: 0 20px 20px 20px;
-      .icon {
-        flex: 0 0 60px;
-        width: 60px;
-        padding-right: 20px;
+      height: 0;
+      padding-top: 40%;
+      overflow: hidden;
+      .slider-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
       }
-      .text {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex: 1;
-        line-height: 20px;
-        overflow: hidden;
+    }
+    .recommend-list {
+      .list-title {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
         font-size: 10px;
+        color: yellow;
       }
-      .name {
-        margin-bottom: 10px;
-        color: white;
-      }
-      .title {
-        color: rgba(247, 240, 240, 0.808);
+      .item {
+        display: flex;
+        box-sizing: border-box;
+        align-items: center;
+        padding: 0 20px 20px 20px;
+        .icon {
+          flex: 0 0 60px;
+          width: 60px;
+          padding-right: 20px;
+        }
+        .text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          flex: 1;
+          line-height: 20px;
+          overflow: hidden;
+          font-size: 10px;
+        }
+        .name {
+          margin-bottom: 10px;
+          color: white;
+        }
+        .title {
+          color: rgba(247, 240, 240, 0.808);
+        }
       }
     }
   }
-  // }
 }
 </style>
