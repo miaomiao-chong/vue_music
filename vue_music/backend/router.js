@@ -56,16 +56,16 @@ function registerPlayslist(app){
       // res.json(result.data)
       playlist= playlist.data.playlists
       console.log('playlists', playlist);
-      let playlistArr=[]
-      for(let i=0; i<playlist.length; i++){
-        let playlistData = {}
-        playlistData.id = playlist[i].id
-        playlistData.username = playlist[i].name
-        playlistData.title = playlist[i].copywriter
-        playlistData.pic = playlist[i].coverImgUrl
-        playlistArr.push(playlistData)
-      }
       if(data.code===ERR_OK) {
+        let playlistArr=[]
+        for(let i=0; i<playlist.length; i++){
+          let playlistData = {}
+          playlistData.id = playlist[i].id
+          playlistData.username = playlist[i].name
+          playlistData.title = playlist[i].copywriter
+          playlistData.pic = playlist[i].coverImgUrl
+          playlistArr.push(playlistData)
+        }
         res.json({
           code: ERR_OK,
           result: {
