@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- 推荐页面 -->
-    <!-- <slider :sliders="sliders"></slider> -->
     <div class="recommend">
       <div class="slider-wrapper">
         <div class="slider-content">
@@ -13,7 +11,7 @@
 </template>
 
 <script>
-  import { getBanner } from '@/service/banner'
+  import { getBanner, getPlaylist } from '@/service/recommend'
   import Slider from '@/components/base/slider/slider'
   export default {
     name: 'recommend',
@@ -22,16 +20,21 @@
     },
     data() {
       return {
-        sliders: []
+        sliders: [],
+        albums: []
       }
     },
     async created() {
       const result = await getBanner()
-      console.log(result)
+      // console.log(result)
       this.sliders = result.data.result.sliders
       console.log('sliders', this.sliders.length)
+
+      const playlist = await getPlaylist()
+      // console.log("play", playlist)
+      this.albums = playlist
     }
-  }
+}
 </script>
 
 <style lang="scss" scoped>

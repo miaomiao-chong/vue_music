@@ -40,7 +40,7 @@
     setup() {
       const rootRef = ref(null)
       const { currentPageIndex } = useSlider(rootRef)
-      console.log(rootRef)
+      // console.log(rootRef)
       return {
         rootRef,
         currentPageIndex
@@ -84,12 +84,12 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: blueviolet;
+        background: rgb(238, 234, 241);
         &.active {
           width: 20px;
           border-radius: 5px;
           // backgroud: $color-text-ll;
-          background: blue;
+          background: rgb(182, 182, 196);
         }
       }
     }

@@ -5,3 +5,8 @@ export function getBanner() {
     type: 1
   })
 }
+export function getPlaylist() {
+  return get('/api/getPlaylist', {
+    limit: 10
+  })
+}
