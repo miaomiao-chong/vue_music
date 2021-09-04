@@ -29,12 +29,15 @@ function registerbanner(app){
           sliderItem.titleColor=banners[i].titleColor
           sliders.push(sliderItem)
         }
-        res.json({
-          code: ERR_OK,
-          result: {
-            sliders
-          }
-        })
+        setTimeout(() => {
+          res.json({
+            code: ERR_OK,
+            result: {
+              sliders
+            }
+          })
+        }, 3000);
+       
       }else{
         res.json('出错了')
       }
