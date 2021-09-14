@@ -1,45 +1,45 @@
 const axios = require('axios')
-const pinyin =require('pinyin')
+const pinyin = require('pinyin')
 const ERR_OK = 200
 const baseUrl = 'http://47.103.29.206:3000'
 
-function registerRouter(app){
+function registerRouter(app) {
   registerbanner(app),
-  registerPlayslist(app),
-  registerSingerList(app)
+    registerPlayslist(app),
+    registerSingerList(app)
 }
 // 推荐slider
-function registerbanner(app){
-  app.get('/api/getBanner', (req, res)=>{
+function registerbanner(app) {
+  app.get('/api/getBanner', (req, res) => {
     const url = `${baseUrl}/banner`
     const query = req.query
-    axios.get(url, query).then((result)=>{
-      const data=result.data
+    axios.get(url, query).then((result) => {
+      const data = result.data
       // console.log(result);
       // res.json(result.data)
-      if(data.code===ERR_OK) {
-        const banners=data.banners
+      if (data.code === ERR_OK) {
+        const banners = data.banners
         const sliders = []
-        for(let i = 0;i<6;i++){
+        for (let i = 0; i < 6; i++) {
           let sliderItem = {}
-          sliderItem.pic=banners[i].imageUrl
-          sliderItem.url=banners[i].url
-          sliderItem.targetId=banners[i].targetId
-          sliderItem.targetType=banners[i].targetType
-          sliderItem.typeTitle=banners[i].typeTitle
-          sliderItem.titleColor=banners[i].titleColor
+          sliderItem.pic = banners[i].imageUrl
+          sliderItem.url = banners[i].url
+          sliderItem.targetId = banners[i].targetId
+          sliderItem.targetType = banners[i].targetType
+          sliderItem.typeTitle = banners[i].typeTitle
+          sliderItem.titleColor = banners[i].titleColor
           sliders.push(sliderItem)
         }
-        setTimeout(() => {
-          res.json({
-            code: ERR_OK,
-            result: {
-              sliders
-            }
-          })
-        }, 3000);
-       
-      }else{
+
+        res.json({
+          code: ERR_OK,
+          result: {
+            sliders
+          }
+        })
+
+
+      } else {
         res.json('出错了')
       }
     })
@@ -47,22 +47,22 @@ function registerbanner(app){
 }
 
 // 推荐歌单
-function registerPlayslist(app){
+function registerPlayslist(app) {
   app.get('/api/getPlaylist', (req, res) => {
     const url = `${baseUrl}/top/playlist/highquality`
     const params = req.query
-    params.limit=Number(params.limit)
+    params.limit = Number(params.limit)
     console.log("params", params);
-    axios.get(url, {params}).then((playlist) => {
-      const data=playlist.data
+    axios.get(url, { params }).then((playlist) => {
+      const data = playlist.data
       console.log(playlist)
       // console.log(data);
       // res.json(result.data)
-      playlist= playlist.data.playlists
+      playlist = playlist.data.playlists
       console.log('playlists', playlist);
-      if(data.code===ERR_OK) {
-        let playlistArr=[]
-        for(let i=0; i<playlist.length; i++){
+      if (data.code === ERR_OK) {
+        let playlistArr = []
+        for (let i = 0; i < playlist.length; i++) {
           let playlistData = {}
           playlistData.id = playlist[i].id
           playlistData.username = playlist[i].name
@@ -76,7 +76,7 @@ function registerPlayslist(app){
             playlistArr
           }
         })
-      }else{
+      } else {
         res.json('出错了')
       }
     })
@@ -84,46 +84,46 @@ function registerPlayslist(app){
 }
 
 // 歌手数据
-function registerSingerList(app){
-  app.get('/api/singer', (req,res) =>{
+function registerSingerList(app) {
+  app.get('/api/singer', (req, res) => {
     const HOT_NAME = '热'
-    const url=`${baseUrl}/top/artists`
-    const params=req.query
-    params.limit&&(params.limit=Number(params.limit))
-    params.offset&&Number(params.offset)
+    const url = `${baseUrl}/top/artists`
+    const params = req.query
+    params.limit && (params.limit = Number(params.limit))
+    params.offset && Number(params.offset)
     console.log(params);
-    axios.get(url, {params}).then((result)=>{
-      const artists=result.data.artists
+    axios.get(url, { params }).then((result) => {
+      const artists = result.data.artists
       // 过滤接收到的数据
-      const artistList = artists.map((item)=>{
+      const artistList = artists.map((item) => {
         return {
-          id:item.id,
-          name:item.name,
-          picUrl:item.picUrl
+          id: item.id,
+          name: item.name,
+          picUrl: item.picUrl
         }
       })
       // 初始化singerMap
-      const singerMap={
-        hot:{
-          title:HOT_NAME,
-          list:artistList.slice(0,6)
+      const singerMap = {
+        hot: {
+          title: HOT_NAME,
+          list: artistList.slice(0, 6)
         }
       }
       // 把歌手对应的首字母作为key push到singerMap
-      artistList.forEach((item)=>{
+      artistList.forEach((item) => {
         // 把歌手名转换成拼音  找出拼音的首字母就知道歌手属于哪个字母了
-        const p=pinyin(item.name)
-        if(!p||!p.length){
-          return 
+        const p = pinyin(item.name)
+        if (!p || !p.length) {
+          return
         }
         // console.log(p);
-        const key=p[0][0].slice(0,1).toUpperCase()
-        if(key){
+        const key = p[0][0].slice(0, 1).toUpperCase()
+        if (key) {
           // 没有当前字母
-          if(!singerMap[key]){
-            singerMap[key]={
-              title:key,
-              list:[]
+          if (!singerMap[key]) {
+            singerMap[key] = {
+              title: key,
+              list: []
             }
           }
         }
@@ -133,26 +133,26 @@ function registerSingerList(app){
       // console.log(result.data);
       // console.log(artistList)
       // 遍历处理 singerMap 让结果有序
-      const hot=[]
-      const letter=[]
-      for(const key in singerMap){
-        const item= singerMap[key]
-        if(item.title.match(/[a-zA-Z]/)){
+      const hot = []
+      const letter = []
+      for (const key in singerMap) {
+        const item = singerMap[key]
+        if (item.title.match(/[a-zA-Z]/)) {
           letter.push(item)
-        }else if(item.title==HOT_NAME){
+        } else if (item.title == HOT_NAME) {
           hot.push(item)
         }
       }
       // 按字母顺序排序
-      letter.sort((a,b)=>{
-        return a.title.charCodeAt(0)-b.title.charCodeAt(0)
+      letter.sort((a, b) => {
+        return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
       console.log(letter);
       res.json({
-        result:hot.concat(letter),
-        code:ERR_OK
+        result: hot.concat(letter),
+        code: ERR_OK
       })
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err);
     })
   })

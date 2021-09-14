@@ -20,6 +20,8 @@ module.exports = {
     'semi': 'off',
     'comma-dangle': 'off',
     'quotes': 'off',
-    'vue/no-unused-components': 'off'
+    'vue/no-unused-components': 'off',
+    'no-trailing-spaces':'off',
+    'eol-last':'off'
   }
 }
