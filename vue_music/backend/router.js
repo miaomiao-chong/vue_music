@@ -1,13 +1,14 @@
 const axios = require('axios')
-
+const pinyin =require('pinyin')
 const ERR_OK = 200
 const baseUrl = 'http://47.103.29.206:3000'
 
 function registerRouter(app){
   registerbanner(app),
-  registerPlayslist(app)
+  registerPlayslist(app),
+  registerSingerList(app)
 }
-// 推荐
+// 推荐slider
 function registerbanner(app){
   app.get('/api/getBanner', (req, res)=>{
     const url = `${baseUrl}/banner`
@@ -82,4 +83,78 @@ function registerPlayslist(app){
   })
 }
 
+// 歌手数据
+function registerSingerList(app){
+  app.get('/api/singer', (req,res) =>{
+    const HOT_NAME = '热'
+    const url=`${baseUrl}/top/artists`
+    const params=req.query
+    params.limit&&(params.limit=Number(params.limit))
+    params.offset&&Number(params.offset)
+    console.log(params);
+    axios.get(url, {params}).then((result)=>{
+      const artists=result.data.artists
+      // 过滤接收到的数据
+      const artistList = artists.map((item)=>{
+        return {
+          id:item.id,
+          name:item.name,
+          picUrl:item.picUrl
+        }
+      })
+      // 初始化singerMap
+      const singerMap={
+        hot:{
+          title:HOT_NAME,
+          list:artistList.slice(0,6)
+        }
+      }
+      // 把歌手对应的首字母作为key push到singerMap
+      artistList.forEach((item)=>{
+        // 把歌手名转换成拼音  找出拼音的首字母就知道歌手属于哪个字母了
+        const p=pinyin(item.name)
+        if(!p||!p.length){
+          return 
+        }
+        // console.log(p);
+        const key=p[0][0].slice(0,1).toUpperCase()
+        if(key){
+          // 没有当前字母
+          if(!singerMap[key]){
+            singerMap[key]={
+              title:key,
+              list:[]
+            }
+          }
+        }
+        // push相应歌手到对应key的list下面
+        singerMap[key].list.push(item)
+      })
+      // console.log(result.data);
+      // console.log(artistList)
+      // 遍历处理 singerMap 让结果有序
+      const hot=[]
+      const letter=[]
+      for(const key in singerMap){
+        const item= singerMap[key]
+        if(item.title.match(/[a-zA-Z]/)){
+          letter.push(item)
+        }else if(item.title==HOT_NAME){
+          hot.push(item)
+        }
+      }
+      // 按字母顺序排序
+      letter.sort((a,b)=>{
+        return a.title.charCodeAt(0)-b.title.charCodeAt(0)
+      })
+      console.log(letter);
+      res.json({
+        result:hot.concat(letter),
+        code:ERR_OK
+      })
+    }).catch((err)=>{
+      console.log(err);
+    })
+  })
+}
 module.exports = registerRouter
