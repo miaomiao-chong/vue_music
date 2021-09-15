@@ -30,7 +30,7 @@ export default {
 .singer{
   position: fixed;
   width:100%;
-  top: 90px;
+  top: 88px;
   bottom: 0px;
 }
 </style>
