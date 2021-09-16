@@ -46,6 +46,7 @@ export default {
   display: flex;
   height: 44px;
   line-height: 44px;
+  // z-index: 100;
   .tab-item {
     flex: 1;
     text-align: center;

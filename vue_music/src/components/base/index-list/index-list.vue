@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div class="fixed" v-show="fixedTitle">
+    <div class="fixed" v-show="fixedTitle" :style="fixedStyle">
       <div class="fixed-title">
         {{ fixedTitle }}
       </div>
@@ -20,6 +20,7 @@
 <script>
 import Scroll from "@/components/base/scroll/scroll";
 const heightArr = [];
+const TITLE_HEIGHT = 20;
 // let currentIndex = 0;
 export default {
   components: { Scroll },
@@ -35,6 +36,7 @@ export default {
     return {
       scrollY: 0,
       currentIndex: 0,
+      distance: 0,
     };
   },
   watch: {
@@ -64,6 +66,7 @@ export default {
         if (val >= heightTop && val <= heightBottom) {
           // 当前展示组的索引
           this.currentIndex = i;
+          this.distance = heightBottom - val;
           // this.fixedTitle = this.list[currentIndex].title;
         }
       }
@@ -75,7 +78,7 @@ export default {
       console.log(this.scrollY);
       // console.log(this.list[currentIndex].title);
       if (this.scrollY < 0) {
-        return '';
+        return "";
       }
       const currentGroupTitle =
         (this.list &&
@@ -84,6 +87,13 @@ export default {
         "";
       console.log(this.list);
       return currentGroupTitle;
+    },
+    fixedStyle() {
+      // diff 偏移值
+      // diff是个负值，因为是向上偏移
+      const diff =
+        this.distance > 0 && this.distance < TITLE_HEIGHT ? this.distance - TITLE_HEIGHT : 0;
+      return `transform: translate3d(0,${diff}px,0)`;
     },
   },
   methods: {
@@ -132,7 +142,9 @@ export default {
     height: 30px;
     background: rgb(145, 137, 137);
     color: rgb(90, 90, 90);
+    // z-index: -1;
     .fixed-title {
+      font-size:  12px;
       padding-left: 7px;
       line-height: 30px;
     }
