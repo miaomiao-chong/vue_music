@@ -9,9 +9,9 @@
         </div>
       </div>
     </div>
-    <div class="fixed">
+    <div class="fixed" v-show="fixedTitle">
       <div class="fixed-title">
-        <!-- {{ fixedTitle }} -->
+        {{ fixedTitle }}
       </div>
     </div>
   </Scroll>
@@ -19,8 +19,8 @@
 
 <script>
 import Scroll from "@/components/base/scroll/scroll";
-import useFixed from "./use-fixed";
-let scrollY = 0;
+const heightArr = [];
+// let currentIndex = 0;
 export default {
   components: { Scroll },
   props: {
@@ -31,19 +31,19 @@ export default {
       },
     },
   },
-  // setup(props) {
-  //   const { groupRef } = useFixed(props);
-  //   return {
-  //     groupRef,
-  //   };
-  // },
-
+  data() {
+    return {
+      scrollY: 0,
+      currentIndex: 0,
+    };
+  },
   watch: {
-    list: function () {
+    list() {
       this.$nextTick(() => {
         const children = this.$refs.groupRef.children;
+        heightArr.push(0);
         console.log(children);
-        const heightArr = [];
+
         let height = 0;
         for (let i = 0; i < children.length; i++) {
           height += children[i].clientHeight;
@@ -53,11 +53,43 @@ export default {
         console.log(heightArr);
       });
     },
+    // 监听滚动
+    scrollY(val) {
+      // console.log(val);
+      // 判断滑动的y值哪个区间内
+      for (let i = 0; i < heightArr.length - 1; i++) {
+        const heightTop = heightArr[i];
+        const heightBottom = heightArr[i + 1];
+        // 落在这个区间内
+        if (val >= heightTop && val <= heightBottom) {
+          // 当前展示组的索引
+          this.currentIndex = i;
+          // this.fixedTitle = this.list[currentIndex].title;
+        }
+      }
+    },
+  },
+  computed: {
+    fixedTitle() {
+      console.log(this.currentIndex);
+      console.log(this.scrollY);
+      // console.log(this.list[currentIndex].title);
+      if (this.scrollY < 0) {
+        return '';
+      }
+      const currentGroupTitle =
+        (this.list &&
+          this.list[this.currentIndex] &&
+          this.list[this.currentIndex].title) ||
+        "";
+      console.log(this.list);
+      return currentGroupTitle;
+    },
   },
   methods: {
     onScroll(val) {
-      // console.log(scrollY);
-      scrollY=-val
+      // console.log(val);
+      this.scrollY = -val.y;
     },
   },
 };
