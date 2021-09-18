@@ -1,12 +1,14 @@
 const axios = require('axios')
 const pinyin = require('pinyin')
-const ERR_OK = 200
+const CODE_OK = 200
 const baseUrl = 'http://47.103.29.206:3000'
+const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
 function registerRouter(app) {
   registerbanner(app),
     registerPlayslist(app),
-    registerSingerList(app)
+    registerSingerList(app),
+    registerSingerDetail(app)
 }
 // 推荐slider
 function registerbanner(app) {
@@ -17,7 +19,7 @@ function registerbanner(app) {
       const data = result.data
       // console.log(result);
       // res.json(result.data)
-      if (data.code === ERR_OK) {
+      if (data.code === CODE_OK) {
         const banners = data.banners
         const sliders = []
         for (let i = 0; i < 6; i++) {
@@ -32,7 +34,7 @@ function registerbanner(app) {
         }
 
         res.json({
-          code: ERR_OK,
+          code: CODE_OK,
           result: {
             sliders
           }
@@ -60,7 +62,7 @@ function registerPlayslist(app) {
       // res.json(result.data)
       playlist = playlist.data.playlists
       console.log('playlists', playlist);
-      if (data.code === ERR_OK) {
+      if (data.code === CODE_OK) {
         let playlistArr = []
         for (let i = 0; i < playlist.length; i++) {
           let playlistData = {}
@@ -71,7 +73,7 @@ function registerPlayslist(app) {
           playlistArr.push(playlistData)
         }
         res.json({
-          code: ERR_OK,
+          code: CODE_OK,
           result: {
             playlistArr
           }
@@ -150,11 +152,50 @@ function registerSingerList(app) {
       console.log(letter);
       res.json({
         result: hot.concat(letter),
-        code: ERR_OK
+        code: CODE_OK
       })
     }).catch((err) => {
       console.log(err);
     })
   })
+}
+
+// 歌手点击进去歌手歌曲页面
+function registerSingerDetail(app) {
+  app.get('/api/getSingerDetail', (req, res) => {
+    const params = req.query
+    const url = `${baseUrl}/artist/top/song`
+    axios.get(url, { params }).then((result) => {
+      const  data = result.data.songs
+      const songList=[]
+      data.forEach((item) => {
+        const singer = mergeSinger(item.ar)
+        const id = item.id
+        const name = item.name
+        const url = ''
+        const pic = item.al.picUrl
+        const album = item.al.name
+        const alId = item.al.id
+        const songItem = {
+          singer,id,name,url,pic,album,alId
+        }
+        songList.push(songItem)
+      })
+      res.json({
+        result: songList
+      })
+    })
+  })
+}
+
+function mergeSinger(singer) {
+  if (singer.length == 0 || !singer) {
+    return
+  }
+  const singerMerge = []
+  singer.forEach((item) => {
+    singerMerge.push(item.name)
+  })
+  return singerMerge.join('/')
 }
 module.exports = registerRouter

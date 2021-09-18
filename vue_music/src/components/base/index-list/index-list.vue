@@ -3,7 +3,12 @@
     <div ref="groupRef" class="aaa">
       <div class="group-list" v-for="group in list" :key="group.name">
         <div class="title">{{ group.title }}</div>
-        <div class="listItem" v-for="item in group.list" :key="item.name">
+        <div
+          class="listItem"
+          v-for="item in group.list"
+          :key="item.name"
+          @click="onItemClick(item)"
+        >
           <img v-lazy="item.picUrl" alt="" srcset="" />
           <div class="name">{{ item.name }}</div>
         </div>
@@ -92,7 +97,9 @@ export default {
       // diff 偏移值
       // diff是个负值，因为是向上偏移
       const diff =
-        this.distance > 0 && this.distance < TITLE_HEIGHT ? this.distance - TITLE_HEIGHT : 0;
+        this.distance > 0 && this.distance < TITLE_HEIGHT
+          ? this.distance - TITLE_HEIGHT
+          : 0;
       return `transform: translate3d(0,${diff}px,0)`;
     },
   },
@@ -100,6 +107,10 @@ export default {
     onScroll(val) {
       // console.log(val);
       this.scrollY = -val.y;
+    },
+    onItemClick(item) {
+      // console.log(item);
+      this.$emit('select', item)
     },
   },
 };
@@ -144,9 +155,9 @@ export default {
     color: rgb(90, 90, 90);
     // z-index: -1;
     .fixed-title {
-      font-size:  12px;
+      font-size: 12px;
       padding-left: 7px;
-      line-height: 30px;
+      line-height: 30px;  
     }
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <index-list :list="singerList"></index-list>
+    <router-view :singer="selectedSinger"></router-view>
+    <index-list :list="singerList" @select="selectSinger"></index-list> 
   </div>
 </template>
 
@@ -13,8 +14,10 @@ export default {
   data() {
     return {
       singerList: [],
-    }
+      selectedSinger: null,
+    };
   },
+
   async created() {
     let result = await getSingerList();
     // console.log(result); // 这里的result太复杂了
@@ -24,12 +27,19 @@ export default {
     console.log(result);
     this.singerList = result;
   },
+  methods: {
+    selectSinger(item) {
+      // console.log(item);
+      this.selectedSinger = item;
+      this.$router.push(`/singer/${item.id}`);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-.singer{
+.singer {
   position: fixed;
-  width:100%;
+  width: 100%;
   top: 88px;
   bottom: 0px;
   overflow: hidden;
