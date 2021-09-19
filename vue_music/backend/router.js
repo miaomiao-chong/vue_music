@@ -2,13 +2,14 @@ const axios = require('axios')
 const pinyin = require('pinyin')
 const CODE_OK = 200
 const baseUrl = 'http://47.103.29.206:3000'
-const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
+// const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
 function registerRouter(app) {
   registerbanner(app),
     registerPlayslist(app),
     registerSingerList(app),
-    registerSingerDetail(app)
+    registerSingerDetail(app),
+    registerSongUrl(app)
 }
 // 推荐slider
 function registerbanner(app) {
@@ -166,8 +167,8 @@ function registerSingerDetail(app) {
     const params = req.query
     const url = `${baseUrl}/artist/top/song`
     axios.get(url, { params }).then((result) => {
-      const  data = result.data.songs
-      const songList=[]
+      const data = result.data.songs
+      const songList = []
       data.forEach((item) => {
         const singer = mergeSinger(item.ar)
         const id = item.id
@@ -177,7 +178,7 @@ function registerSingerDetail(app) {
         const album = item.al.name
         const alId = item.al.id
         const songItem = {
-          singer,id,name,url,pic,album,alId
+          singer, id, name, url, pic, album, alId
         }
         songList.push(songItem)
       })
@@ -187,6 +188,81 @@ function registerSingerDetail(app) {
     })
   })
 }
+
+// 获取歌曲url
+function registerSongUrl(app) {
+  app.post('/api/getSongUrl',  (req, res) => {
+    // console.log(req);
+    let mid = req.body
+    console.log(mid);
+    mid =  process(mid).then((res) => {
+      return res.data.data
+    })
+    // console.log(mid);
+    // mid:歌曲的mid数组
+    // let midGroup = []
+    // // // 如果超过100条数据，把数据按每组100条切割(qq音乐)，发送多个请求
+    // // // 不知道网易云是不是这样，而且传入的是50条数据，不过还是学习一下
+    // // // 这里改成50一下才能看到效果
+    // if (mid.length > 30) {
+    //   const groupLen = Math.ceil(mid.length / 100)
+    //   for (let i = 0; i < groupLen; i++) {
+    //     midGroup.push(mid.slice(i * 100), (100 * (i + 1)))
+    //   }
+    // } else {
+    //   midGroup = mid
+    // }
+    // // // 以歌曲的id为key,存储歌曲URL
+    // // // 这个urlMap是给前端用的，因为知道了每个id对应什么歌曲，那就可以遍历
+    // // // 之前的歌曲列表，然后拿到每个歌曲的id,然后就能映射它的url是什么，
+    // // // 就可以给他补充url信息了
+    // const urlMap = {}
+
+
+
+    // // // 构造多个Promise请求
+    // const requests = midGroup.map((item) => {
+    //   return process(item)
+    // })
+
+    // Promise.all(requests).then((result) => {
+    //   res.json({
+    //     code: CODE_OK,
+    //     result: {
+    //       map: midGroup
+    //     }
+    //   })
+
+    // })
+    res.json({
+      code: mid
+    })
+
+  })
+  // 处理返回的id
+  function process(item) {
+    return new Promise((resolve, reject) => {
+      const url = `${baseUrl}/song/url`
+
+      let id = []
+      item.forEach((item) => {
+        // console.log("item", item)
+        id.push(item.id)
+      })
+      id = id.join(',')
+      console.log("id", id);
+      axios.post(url, { id }).then((result) => {
+        console.log(result);
+        resolve(result)
+        // return result
+      }).catch((err) => {
+        console.log(res);
+      })
+    })
+
+  }
+}
+
 
 function mergeSinger(singer) {
   if (singer.length == 0 || !singer) {
@@ -198,4 +274,5 @@ function mergeSinger(singer) {
   })
   return singerMerge.join('/')
 }
+
 module.exports = registerRouter

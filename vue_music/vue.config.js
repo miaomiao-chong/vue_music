@@ -1,5 +1,5 @@
-const registerRouter = require ('./backend/router')
-
+const registerRouter = require('./backend/router')
+const bodyParser = require('body-parser')
 module.exports = {
   css: {
     loaderOptions: {
@@ -14,8 +14,10 @@ module.exports = {
   // 提供before一个函数，app就是express的一个实例，就可以调用app来搭建后端路由等等
   devServer: {
     before(app) {
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(bodyParser.json());
       registerRouter(app)
     }
   }
-  
+
 }

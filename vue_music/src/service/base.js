@@ -13,3 +13,7 @@ export function get(url, params) {
     console.log(err)
   })
 }
+
+export function post(url, item) {
+  return axios.post(url, item)
+}
