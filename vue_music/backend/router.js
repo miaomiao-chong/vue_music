@@ -55,10 +55,10 @@ function registerPlayslist(app) {
     const url = `${baseUrl}/top/playlist/highquality`
     const params = req.query
     params.limit = Number(params.limit)
-    console.log("params", params);
+    // console.log("params", params);
     axios.get(url, { params }).then((playlist) => {
       const data = playlist.data
-      console.log(playlist)
+      // console.log(playlist)
       // console.log(data);
       // res.json(result.data)
       playlist = playlist.data.playlists
@@ -94,7 +94,7 @@ function registerSingerList(app) {
     const params = req.query
     params.limit && (params.limit = Number(params.limit))
     params.offset && Number(params.offset)
-    console.log(params);
+    // console.log(params);
     axios.get(url, { params }).then((result) => {
       const artists = result.data.artists
       // 过滤接收到的数据
@@ -150,7 +150,7 @@ function registerSingerList(app) {
       letter.sort((a, b) => {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
-      console.log(letter);
+      // console.log(letter);
       res.json({
         result: hot.concat(letter),
         code: CODE_OK
@@ -191,75 +191,33 @@ function registerSingerDetail(app) {
 
 // 获取歌曲url
 function registerSongUrl(app) {
-  app.post('/api/getSongUrl',  (req, res) => {
+  app.post('/api/getSongUrl', async (req, res) => {
     // console.log(req);
     let mid = req.body
-    console.log(mid);
-    mid =  process(mid).then((res) => {
-      return res.data.data
-    })
-    // console.log(mid);
-    // mid:歌曲的mid数组
-    // let midGroup = []
-    // // // 如果超过100条数据，把数据按每组100条切割(qq音乐)，发送多个请求
-    // // // 不知道网易云是不是这样，而且传入的是50条数据，不过还是学习一下
-    // // // 这里改成50一下才能看到效果
-    // if (mid.length > 30) {
-    //   const groupLen = Math.ceil(mid.length / 100)
-    //   for (let i = 0; i < groupLen; i++) {
-    //     midGroup.push(mid.slice(i * 100), (100 * (i + 1)))
-    //   }
-    // } else {
-    //   midGroup = mid
-    // }
-    // // // 以歌曲的id为key,存储歌曲URL
-    // // // 这个urlMap是给前端用的，因为知道了每个id对应什么歌曲，那就可以遍历
-    // // // 之前的歌曲列表，然后拿到每个歌曲的id,然后就能映射它的url是什么，
-    // // // 就可以给他补充url信息了
-    // const urlMap = {}
-
-
-
-    // // // 构造多个Promise请求
-    // const requests = midGroup.map((item) => {
-    //   return process(item)
-    // })
-
-    // Promise.all(requests).then((result) => {
-    //   res.json({
-    //     code: CODE_OK,
-    //     result: {
-    //       map: midGroup
-    //     }
-    //   })
-
-    // })
+    // console.log("mid", mid);
+    let result = await process(mid)
+    console.log("result", result);
     res.json({
-      code: mid
+      result: result
     })
 
   })
   // 处理返回的id
   function process(item) {
-    return new Promise((resolve, reject) => {
-      const url = `${baseUrl}/song/url`
 
-      let id = []
-      item.forEach((item) => {
-        // console.log("item", item)
-        id.push(item.id)
-      })
-      id = id.join(',')
-      console.log("id", id);
-      axios.post(url, { id }).then((result) => {
-        console.log(result);
-        resolve(result)
-        // return result
-      }).catch((err) => {
-        console.log(res);
-      })
+    const url = `${baseUrl}/song/url`
+
+    let id = []
+    item.forEach((item) => {
+      // console.log("item", item)
+      id.push(item.id)
     })
-
+    id = id.join(',')
+    console.log("id", id);
+    return axios.post(url, { id }).then((res) => {
+      // console.log("res", res.data.data);
+      return res.data.data
+    })
   }
 }
 
