@@ -189,16 +189,17 @@ function registerSingerDetail(app) {
   })
 }
 
-// 获取歌曲url
+// 获取歌曲url   可以和获取歌手合并
 function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
-    // console.log(req);
-    let mid = req.body
+    // console.log(req.body);
+    let mid = req.body.mid
     // console.log("mid", mid);
     let result = await process(mid)
-    console.log("result", result);
+    // console.log("result", result);
     res.json({
-      result: result
+      result: result,
+      code:CODE_OK
     })
 
   })
@@ -207,6 +208,7 @@ function registerSongUrl(app) {
 
     const url = `${baseUrl}/song/url`
 
+    const urlMap = {}
     let id = []
     item.forEach((item) => {
       // console.log("item", item)
@@ -216,7 +218,16 @@ function registerSongUrl(app) {
     console.log("id", id);
     return axios.post(url, { id }).then((res) => {
       // console.log("res", res.data.data);
-      return res.data.data
+      const data = res.data.data
+      data.forEach((info) => {
+        //  以歌曲的id为key,存储歌曲URL
+        // 这个urlMap是给前端用的，因为知道了每个id对应什么歌曲，那就可以遍历
+        // 之前的歌曲列表，然后拿到每个歌曲的id,然后就能映射它的url是什么，
+        // 就可以给他补充url信息了
+        urlMap[info.id]=(!info.url||info.url=='')?`https://music.163.com/song/media/outer/url?${info.id}=${info.id}.mp3`:info.url
+      })
+      // console.log(urlMap);
+      return urlMap
     })
   }
 }

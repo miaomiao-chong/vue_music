@@ -14,6 +14,8 @@ export function get(url, params) {
   })
 }
 
-export function post(url, item) {
-  return axios.post(url, item)
+export function post(url, data) {
+  return axios.post(url, data).then((res) => {
+    return res.data.result
+  })
 }

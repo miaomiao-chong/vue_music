@@ -6,7 +6,3 @@ export function getSingerList() {
 export function getSingerDetail(singer) {
   return get('/api/getSingerDetail', { id: singer.id })
 }
-
-export function getSongUrl(mid) {
-  return post('/api/getSongUrl',mid)
-}

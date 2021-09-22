@@ -7,7 +7,8 @@
 <script>
 import axios from "axios";
 // import qs, { stringify } from "qs";
-import { getSingerDetail, getSongUrl } from "@/service/singer";
+import { getSingerDetail } from "@/service/singer";
+import { getSongUrl } from "@/service/song";
 export default {
   name: "singer-detail",
   props: {
@@ -16,17 +17,9 @@ export default {
   async created() {
     let result = await getSingerDetail(this.singer);
     result = result.data.result;
-    console.log("singer-detail");
-    // const test1 = await test({ data: "fdasd" });
-    // console.log("test1", test1);
-    // result = qs.stringify(result);
-    console.log(result);
-    // axios.post("/api/getSongUrl", { data: result }).then((res) => {
-    //   console.log(JSON.parse(res));
-    // });
-    getSongUrl(result).then((res) => {
-      console.log(res);
-    });
+
+    const urlData = await getSongUrl({ mid: result, aa: "test" })
+    console.log(urlData);
   },
 };
 </script>
