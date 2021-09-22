@@ -62,7 +62,7 @@ function registerPlayslist(app) {
       // console.log(data);
       // res.json(result.data)
       playlist = playlist.data.playlists
-      console.log('playlists', playlist);
+      // console.log('playlists', playlist);
       if (data.code === CODE_OK) {
         let playlistArr = []
         for (let i = 0; i < playlist.length; i++) {
@@ -215,7 +215,7 @@ function registerSongUrl(app) {
       id.push(item.id)
     })
     id = id.join(',')
-    console.log("id", id);
+    // console.log("id", id);
     return axios.post(url, { id }).then((res) => {
       // console.log("res", res.data.data);
       const data = res.data.data
