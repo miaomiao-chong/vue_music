@@ -4,7 +4,8 @@ export function getSongUrl(songs) {
     // console.log("test", res);
     const map = res
     return songs.mid.map((song) => {
-      const id = JSON.stringify(song.id)
+      // const id = JSON.stringify(song.id)
+      const id = song.id
       song.url = map[id]
       // console.log(song.url);
       return song

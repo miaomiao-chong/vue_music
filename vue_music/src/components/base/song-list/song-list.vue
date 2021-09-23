@@ -1,0 +1,58 @@
+<template>
+  <ul v-for="songItem in songs" :key="songItem.id" class="song-list">
+    <li class="item">
+      <!-- 后期还要加上排行奖杯 -->
+      <div class="content">
+        <h2 class="title">{{ songItem.name }}</h2>
+        <p class="desc">{{ songItem.singer }}--{{ songItem.album }}</p>
+      </div>
+    </li>
+  </ul>
+</template>
+
+<script>
+export default {
+  name: "songList",
+  props: {
+    songs: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.song-list {
+  // width: 100%;
+  .item {
+    // width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 64px;
+    font-size: 8px;
+    // font-size: $font-size-medium;
+    .content {
+      flex: 1;
+      line-height: 20px;
+      overflow: hidden;
+      .title {
+        // @include no-wrap();
+      }
+      .desc {
+        // @include no-wrap();
+        width: 100%;
+        color: rgba(222, 223, 224, 0.959);
+        margin-top: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+      }
+    }
+  }
+}
+</style>

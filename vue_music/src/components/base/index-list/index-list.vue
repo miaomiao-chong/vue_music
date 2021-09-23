@@ -49,7 +49,7 @@ export default {
       this.$nextTick(() => {
         const children = this.$refs.groupRef.children;
         heightArr.push(0);
-        console.log(children);
+        // console.log(children);
 
         let height = 0;
         for (let i = 0; i < children.length; i++) {
@@ -57,7 +57,7 @@ export default {
           // console.log(height);
           heightArr.push(height);
         }
-        console.log(heightArr);
+        // console.log(heightArr);
       });
     },
     // 监听滚动
@@ -79,8 +79,8 @@ export default {
   },
   computed: {
     fixedTitle() {
-      console.log(this.currentIndex);
-      console.log(this.scrollY);
+      // console.log(this.currentIndex);
+      // console.log(this.scrollY);
       // console.log(this.list[currentIndex].title);
       if (this.scrollY < 0) {
         return "";
@@ -90,7 +90,7 @@ export default {
           this.list[this.currentIndex] &&
           this.list[this.currentIndex].title) ||
         "";
-      console.log(this.list);
+      // console.log(this.list);
       return currentGroupTitle;
     },
     fixedStyle() {
