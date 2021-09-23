@@ -6,11 +6,17 @@
     </div>
     <h1 class="title">{{ title }}</h1>
     <!-- 背景图片 -->
-    <div class="bg-image" :style="bgImageStyle">
+    <div class="bg-image" :style="bgImageStyle" ref="bgImage">
       <!-- 半透明 -->
       <div class="filter"></div>
+      <div class="play-btn-wrapper">
+        <div class="play-btn">
+          <i class="iconfont icon-Play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
     </div>
-    <scroll class="list">
+    <scroll class="list" :style="scrollStyle" v-loading="loading">
       <div class="song-list-wrapper">
         <Song-list :songs="songs"></Song-list>
       </div>
@@ -34,6 +40,12 @@ export default {
     },
     title: String,
     pic: String,
+    loading: Boolean,
+  },
+  data() {
+    return {
+      imageHeight: 0,
+    };
   },
   created() {
     console.log(this.songs);
@@ -48,11 +60,19 @@ export default {
         //     'url("https://img-blog.csdnimg.cn/a0d98281da88480aa8be2e0dbda23fd6.jpg")',
       };
     },
+    scrollStyle() {
+      return {
+        top: `${this.imageHeight}px`,
+      };
+    },
   },
   methods: {
     goBack() {
-      this.$router.back()
-    }
+      this.$router.back();
+    },
+  },
+  mounted() {
+    this.imageHeight = this.$refs.bgImage.clientHeight;
   },
 };
 </script>
@@ -84,14 +104,39 @@ export default {
     line-height: 40px;
   }
   .bg-image {
+    position: relative;
     width: 100%;
-    height: 250px;
+    // height: 250px;
     background-size: cover;
+    height: 0;
+    padding-top: 70%;
+    .filter {
+    }
+    .play-btn-wrapper {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      .play-btn {
+        margin: 0 auto;
+        // box-sizing: border-box;
+        padding: 8px;
+        text-align: center;
+        width: 140px;
+        border: 1px solid rgb(194, 209, 141);
+        border-radius: 100px;
+        color: rgba(207, 224, 173, 0.911);
+        .icon-Play {
+          margin-right: 5px;
+        }
+        .text {
+        }
+      }
+    }
   }
   .list {
     // height: 300px;
     overflow: hidden;
-    top: 250px;
+
     position: absolute;
     bottom: 0;
     width: 100%;

@@ -1,7 +1,7 @@
 <template>
   <div class="singer-container">
     <!-- <div class="aaa">我是跳转后的页面</div> -->
-    <music-list :title="title" :pic="pic" :songs="songs"></music-list>
+    <music-list :title="title" :pic="pic" :songs="songs" :loading="loading"></music-list>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ export default {
       // pic: "",
       songs: [],
       result: [],
+      loading: true,
     };
   },
 
@@ -37,12 +38,11 @@ export default {
     // console.log(this.singer);
     // this.title = this.singer.name;
     // this.pic = this.singer.picUrl;
-    
     let result = await getSingerDetail(this.singer);
     result = result.data.result;
-
     this.songs = await getSongUrl({ mid: result, aa: "test" });
     console.log(this.songs);
+    this.loading = false;
 
     // console.log("resul", result);
     // console.log("urlData", urlData);
