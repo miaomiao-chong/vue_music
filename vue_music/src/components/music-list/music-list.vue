@@ -8,15 +8,21 @@
     <!-- 背景图片 -->
     <div class="bg-image" :style="bgImageStyle" ref="bgImage">
       <!-- 半透明 -->
-      <div class="filter"></div>
+      <div class="filter" :style="filterStyle"></div>
       <div class="play-btn-wrapper">
-        <div class="play-btn">
+        <div class="play-btn" :style="btnStyle">
           <i class="iconfont icon-Play"></i>
           <span class="text">随机播放全部</span>
         </div>
       </div>
     </div>
-    <scroll class="list" :style="scrollStyle" v-loading="loading">
+    <scroll
+      class="list"
+      :style="scrollStyle"
+      v-loading="loading"
+      :probeType="3"
+      @scroll="onScroll"
+    >
       <div class="song-list-wrapper">
         <Song-list :songs="songs"></Song-list>
       </div>
@@ -28,6 +34,7 @@
 import Scroll from "@/components/base/scroll/scroll";
 import SongList from "@/components/base/song-list/song-list";
 // import Scroll from "../base/scroll/scroll.vue";
+const RESERVE_HRIGHT = 40;
 export default {
   name: "music-list",
   components: { Scroll, SongList },
@@ -45,6 +52,9 @@ export default {
   data() {
     return {
       imageHeight: 0,
+      scrollY: 0,
+      // 最大可以滚动的距离
+      maxTranslateY: 0,
     };
   },
   created() {
@@ -54,15 +64,53 @@ export default {
   },
   computed: {
     bgImageStyle() {
+      const scrollY = this.scrollY;
+      let zIndex = 0;
+      let paddingTop = "70%";
+      let height = 0;
+      let translateZ = 0;
+      if (scrollY > this.maxTranslateY) {
+        zIndex = 10;
+        paddingTop = 0;
+        height = `${RESERVE_HRIGHT}px`;
+        translateZ = 1;
+      }
+
+      let scale = 1;
+      if (scrollY < 0) {
+        scale = 1 + Math.abs(scrollY / this.imageHeight);
+      }
       return {
+        height,
+        paddingTop,
+        zIndex,
         backgroundImage: `url(${this.pic})`,
-        //   backgroundImage:
-        //     'url("https://img-blog.csdnimg.cn/a0d98281da88480aa8be2e0dbda23fd6.jpg")',
+        transform: `scale(${scale})translateZ(${translateZ}px)`,
       };
+    },
+    btnStyle() {
+      let display = "";
+      if (this.scrollY > this.maxTranslateY) {
+        display = "none";
+      }
+      return { display };
     },
     scrollStyle() {
       return {
         top: `${this.imageHeight}px`,
+      };
+    },
+    filterStyle() {
+      let blur = 0;
+      const scrollY = this.scrollY;
+      const imageHeight = this.imageHeight;
+      if (scrollY >= 0) {
+        blur =
+          Math.min(this.maxTranslateY / imageHeight, scrollY / imageHeight) *
+          20;
+      }
+      return {
+        backdropFilter: `blur(${blur}px)`,
       };
     },
   },
@@ -70,9 +118,14 @@ export default {
     goBack() {
       this.$router.back();
     },
+    onScroll(pos) {
+      this.scrollY = -pos.y;
+      console.log(this.scrollY);
+    },
   },
   mounted() {
     this.imageHeight = this.$refs.bgImage.clientHeight;
+    this.maxTranslateY = this.imageHeight - RESERVE_HRIGHT;
   },
 };
 </script>
@@ -107,14 +160,25 @@ export default {
     position: relative;
     width: 100%;
     // height: 250px;
+    transform-origin: top;
     background-size: cover;
-    height: 0;
-    padding-top: 70%;
     .filter {
+      position: absolute;
+      z-index: 22;
+      transform: translateZ(2);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 17, 27, 0.4);
     }
     .play-btn-wrapper {
+      // position: absolute;
+      // bottom: 20px;
+      // width: 100%;
       position: absolute;
       bottom: 20px;
+      z-index: 10;
       width: 100%;
       .play-btn {
         margin: 0 auto;
@@ -125,24 +189,27 @@ export default {
         border: 1px solid rgb(194, 209, 141);
         border-radius: 100px;
         color: rgba(207, 224, 173, 0.911);
+
         .icon-Play {
+          display: inline-block;
           margin-right: 5px;
         }
         .text {
+          display: inline-block;
         }
       }
     }
   }
   .list {
     // height: 300px;
-    overflow: hidden;
+    // overflow: hidden;
 
     position: absolute;
     bottom: 0;
     width: 100%;
     .song-list-wrapper {
       padding: 0 20px;
-      // background: rgb(72, 72, 73);
+      background: rgb(72, 72, 73);
     }
   }
 }
