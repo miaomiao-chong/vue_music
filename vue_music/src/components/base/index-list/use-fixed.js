@@ -20,7 +20,7 @@ export default function useFixed(props) {
       height += list[i].clientHeight
       listHeightsVal.push(height)
     }
-    console.log(listHeightsVal);
+    // console.log(listHeightsVal);
   }
   return {
     groupRef

@@ -1,13 +1,14 @@
 <template>
   <div class="singer">
     <router-view :singer="selectedSinger"></router-view>
-    <index-list :list="singerList" @select="selectSinger"></index-list> 
+    <index-list :list="singerList" @select="selectSinger"></index-list>
   </div>
 </template>
 
 <script>
 import { getSingerList } from "@/service/singer";
 import IndexList from "@/components/base/index-list/index-list";
+import { SINGER_KEY } from "@/assets/js/constant";
 export default {
   name: "singer",
   components: { IndexList },
@@ -31,7 +32,13 @@ export default {
     selectSinger(item) {
       // console.log(item);
       this.selectedSinger = item;
+      this.cacheSinger(item);
+      console.log(sessionStorage.getItem(SINGER_KEY));
       this.$router.push(`/singer/${item.id}`);
+    },
+    cacheSinger(singer) {
+      const setSingerStr = JSON.stringify(singer);
+      sessionStorage.setItem(SINGER_KEY, setSingerStr);
     },
   },
 };

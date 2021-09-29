@@ -120,7 +120,7 @@ export default {
     },
     onScroll(pos) {
       this.scrollY = -pos.y;
-      console.log(this.scrollY);
+      // console.log(this.scrollY);
     },
   },
   mounted() {
