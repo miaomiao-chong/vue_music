@@ -1,13 +1,20 @@
 <template>
   <div>
-    搜索页面
+    页面fsdaf
+    fdsadfa
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'search'
+export default {
+  name: '',
+  data() {
+    return {
+      haha: 'fdsad'
+    }
   }
+}
+
 </script>
 
 <style lang="scss" scoped>

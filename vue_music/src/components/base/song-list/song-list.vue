@@ -1,6 +1,6 @@
 <template>
-  <ul v-for="songItem in songs" :key="songItem.id" class="song-list">
-    <li class="item">
+  <ul v-for="(songItem, index) in songs" :key="songItem.id" class="song-list">
+    <li class="item" :key="songItem.name" @click="selectItem(songItem, index)">
       <!-- 后期还要加上排行奖杯 -->
       <div class="content">
         <h2 class="title">{{ songItem.name }}</h2>
@@ -21,6 +21,13 @@ export default {
       },
     },
   },
+  emits: ['select'],
+  methods: {
+    selectItem(songItem, index) {
+      // 派发一个事件
+      this.$emit('select', { songItem, index })
+    }
+  }
 };
 </script>
 

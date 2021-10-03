@@ -1,6 +1,13 @@
 <template>
+
   <div class="singer">
-    <router-view :singer="selectedSinger"></router-view>
+
+    <router-view v-slot="{ Component }">
+      <transition appear name="slide">
+        <component :is="Component" :singer="selectedSinger" />
+      </transition>
+
+    </router-view>
     <index-list :list="singerList" @select="selectSinger"></index-list>
   </div>
 </template>
@@ -16,7 +23,7 @@ export default {
     return {
       singerList: [],
       selectedSinger: null,
-    };
+    }
   },
 
   async created() {

@@ -24,7 +24,7 @@
       @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <Song-list :songs="songs"></Song-list>
+        <Song-list :songs="songs" @select="selectItem"></Song-list>
       </div>
     </scroll>
   </div>
@@ -33,6 +33,7 @@
 <script>
 import Scroll from "@/components/base/scroll/scroll";
 import SongList from "@/components/base/song-list/song-list";
+
 // import Scroll from "../base/scroll/scroll.vue";
 const RESERVE_HRIGHT = 40;
 export default {
@@ -122,6 +123,13 @@ export default {
       this.scrollY = -pos.y;
       // console.log(this.scrollY);
     },
+    selectItem(data) {
+      const { songItem, index } = data
+      // console.log(index, songItem)
+      // console.log(aaa)
+      // 传入此歌单所有歌曲以及歌曲索引
+      this.$store.dispatch('selectPlay', { list: this.songs, index })
+    }
   },
   mounted() {
     this.imageHeight = this.$refs.bgImage.clientHeight;

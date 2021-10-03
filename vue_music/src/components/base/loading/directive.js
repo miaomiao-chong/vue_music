@@ -1,3 +1,8 @@
+// import Loading from './loading'
+// import createLoadingLikeDirective from '@/assets/js/create-loading-like-directive.js'
+// const loadingDirective = createLoadingLikeDirective(Loading)
+// export default loadingDirective
+
 // 指令对象 把loading组件生成的dom动态
 // 插入到指令作用的dom上
 
@@ -7,9 +12,6 @@
 // 在实例里面就可以拿到dom了，
 import { createApp } from 'vue'
 import Loading from './loading'
-import { addClass, removeClass } from '../../../assets/js/dom'
-const relativeCls = 'g-relative'
-
 const loadingDirective = {
   // 挂载的时候执行
   mounted(el, binding) {
@@ -20,38 +22,22 @@ const loadingDirective = {
     // vue开发实际上是支持多实例的，并不是说只能在入口里里面创建一个实例，
     const instance = app.mount(document.createElement('div'))
     el.instance = instance
-    const title = binding.arg
-    if (typeof title !== 'undefined') {
-      instance.setTitle(title)
-    }
     if (binding.value) {
       append(el)
     }
   },
   // 组件更新时执行
   updated(el, binding) {
-    const title = binding.arg
-    if (typeof title !== 'undefined') {
-      el.instance.setTitle(title)
-    }
     if (binding.value !== binding.oldValue) {
       binding.value ? append(el) : remove(el)
     }
   }
 }
 function append(el) {
-  const style = getComputedStyle(el)
-  // debugger
-  if (['absolute', 'fixed', 'relative'].indexOf(style.position) === -1) {
-    // 给元素添加relative样式
-    addClass(el, relativeCls)
-  }
   // 执行挂载
   el.appendChild(el.instance.$el)
 }
 function remove(el) {
-  // remove样式
-  removeClass(el, relativeCls)
   // 移除
   el.removeChild(el.instance.$el)
 }
