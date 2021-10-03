@@ -10,7 +10,7 @@
       <!-- 半透明 -->
       <div class="filter" :style="filterStyle"></div>
       <div class="play-btn-wrapper">
-        <div class="play-btn" :style="btnStyle">
+        <div class="play-btn" :style="btnStyle" @click="randomPlay">
           <i class="iconfont icon-Play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -38,7 +38,10 @@ import SongList from "@/components/base/song-list/song-list";
 const RESERVE_HRIGHT = 40;
 export default {
   name: "music-list",
-  components: { Scroll, SongList },
+  components: {
+    Scroll,
+    SongList
+  },
   props: {
     songs: {
       type: Array,
@@ -94,7 +97,9 @@ export default {
       if (this.scrollY > this.maxTranslateY) {
         display = "none";
       }
-      return { display };
+      return {
+        display
+      };
     },
     scrollStyle() {
       return {
@@ -124,11 +129,21 @@ export default {
       // console.log(this.scrollY);
     },
     selectItem(data) {
-      const { songItem, index } = data
+      const {
+        songItem,
+        index
+      } = data
       // console.log(index, songItem)
       // console.log(aaa)
       // 传入此歌单所有歌曲以及歌曲索引
-      this.$store.dispatch('selectPlay', { list: this.songs, index })
+      this.$store.dispatch('selectPlay', {
+        list: this.songs,
+        index
+      })
+    },
+    randomPlay() {
+      console.log("随机按钮")
+      this.$store.dispatch('randomPlay', this.songs)
     }
   },
   mounted() {
@@ -142,17 +157,20 @@ export default {
 .music-list {
   height: 100%;
   position: relative;
+
   .back {
     position: absolute;
     top: 0;
     left: 6px;
     z-index: 20;
     transform: translateZ(2px);
+
     .icon-fanhui {
       display: block;
       padding: 10px;
     }
   }
+
   .title {
     position: absolute;
     top: 0;
@@ -164,12 +182,14 @@ export default {
     text-align: center;
     line-height: 40px;
   }
+
   .bg-image {
     position: relative;
     width: 100%;
     // height: 250px;
     transform-origin: top;
     background-size: cover;
+
     .filter {
       position: absolute;
       z-index: 22;
@@ -180,14 +200,16 @@ export default {
       height: 100%;
       background: rgba(7, 17, 27, 0.4);
     }
+
     .play-btn-wrapper {
       // position: absolute;
       // bottom: 20px;
       // width: 100%;
       position: absolute;
       bottom: 20px;
-      z-index: 10;
+      z-index: 30;
       width: 100%;
+
       .play-btn {
         margin: 0 auto;
         // box-sizing: border-box;
@@ -202,12 +224,14 @@ export default {
           display: inline-block;
           margin-right: 5px;
         }
+
         .text {
           display: inline-block;
         }
       }
     }
   }
+
   .list {
     // height: 300px;
     // overflow: hidden;
@@ -215,6 +239,7 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
+
     .song-list-wrapper {
       padding: 0 20px;
       background: rgb(72, 72, 73);

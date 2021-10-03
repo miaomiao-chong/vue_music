@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { PLAY_MODE } from "@/assets/js/constant";
+import { shuffle } from "@/assets/js/utils";
 
 export default createStore({
   state: {
@@ -59,6 +60,16 @@ export default createStore({
       // 先不考虑随机播放 传入顺序播放列表
       state.commit('setPlaylist', list)
       state.commit('setCurrentIndex', index)
+    },
+    randomPlay(state, list) {
+      console.log(list)
+      state.commit('setPlayMode', PLAY_MODE.random);
+      state.commit('setSequenceList', list)
+      // 修改播放暂停或开始
+      state.commit('setPlayingState', true)
+      state.commit('setFullScreen', true)
+      state.commit('setPlaylist', shuffle(list))
+      state.commit('setCurrentIndex', 0)
     }
   },
   modules: {}
