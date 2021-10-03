@@ -32,7 +32,7 @@ export default {
     // getSingerList里面引用的get方法应该再改一下的 只用返回result就行了
     // 这里就还是.data.result来拿到数据
     result = result.data.result;
-    console.log(result);
+    // console.log(result);
     this.singerList = result;
   },
   methods: {
@@ -40,7 +40,7 @@ export default {
       // console.log(item);
       this.selectedSinger = item;
       this.cacheSinger(item);
-      console.log(sessionStorage.getItem(SINGER_KEY));
+      // console.log(sessionStorage.getItem(SINGER_KEY));
       this.$router.push(`/singer/${item.id}`);
     },
     cacheSinger(singer) {

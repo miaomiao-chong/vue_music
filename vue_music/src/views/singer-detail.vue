@@ -38,10 +38,11 @@ export default {
       if (singer) {
         ret = singer;
       } else {
+        console.log("-------sessionStorage.getItem(SINGER_KEY)-----", sessionStorage.getItem(SINGER_KEY));
         const cachedSinger = JSON.parse(sessionStorage.getItem(SINGER_KEY));
-        console.log("cachedSinger", cachedSinger);
-        console.log(typeof cachedSinger.id); // number
-        console.log(typeof this.$route.params.id); // string
+        // console.log("cachedSinger", cachedSinger);
+        // console.log(typeof cachedSinger.id); // number
+        // console.log(typeof this.$route.params.id); // string
         if (
           cachedSinger &&
           JSON.stringify(cachedSinger.id) === this.$route.params.id
@@ -49,7 +50,7 @@ export default {
           ret = cachedSinger;
         }
       }
-      console.log("ret", ret);
+      // console.log("ret", ret);
       return ret;
     },
     //  pic和title为什么要放到计算属性里面
@@ -73,15 +74,16 @@ export default {
     // 如果缓存和点击的不匹配 那就跳到歌手页面
     if (this.computedSinger) {
       const path = this.$route;
-      console.log("path", path);
+      // console.log("path", path);
       // this.$router.push({
       //   path,
       // });
     }
     let result = await getSingerDetail(this.computedSinger);
     result = result.data.result;
+    console.log("---result-----", result)
     this.songs = await getSongUrl({ mid: result, aa: "test" });
-    console.log(this.songs);
+    console.log("----+url songs------", this.songs);
     this.loading = false;
   },
 };

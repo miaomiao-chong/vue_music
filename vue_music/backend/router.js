@@ -2,15 +2,18 @@ const pinyin = require('pinyin')
 const CODE_OK = 200
 const axios = require('axios')
 const baseUrl = 'http://47.103.29.206:3000'
+
 // const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
 function registerRouter(app) {
+  // eslint-disable-next-line no-unused-expressions,no-sequences
   registerbanner(app),
     registerPlayslist(app),
     registerSingerList(app),
     registerSingerDetail(app),
     registerSongUrl(app)
 }
+
 // 推荐slider
 function registerbanner(app) {
   app.get('/api/getBanner', (req, res) => {
@@ -40,8 +43,6 @@ function registerbanner(app) {
             sliders
           }
         })
-
-
       } else {
         res.json('出错了')
       }
@@ -52,6 +53,7 @@ function registerbanner(app) {
 // 推荐歌单
 function registerPlayslist(app) {
   app.get('/api/getPlaylist', (req, res) => {
+    console.log(123)
     const url = `${baseUrl}/top/playlist/highquality`
     const params = req.query
     params.limit = Number(params.limit)
@@ -90,6 +92,7 @@ function registerPlayslist(app) {
 function registerSingerList(app) {
   app.get('/api/singer', (req, res) => {
     const HOT_NAME = '热'
+    console.log(123)
     const url = `${baseUrl}/top/artists`
     const params = req.query
     params.limit && (params.limit = Number(params.limit))
@@ -164,7 +167,9 @@ function registerSingerList(app) {
 // 歌手点击进去歌手歌曲页面
 function registerSingerDetail(app) {
   app.get('/api/getSingerDetail', (req, res) => {
+    console.log("歌手点击进去歌手歌曲页面")
     const params = req.query
+    console.log(params)
     const url = `${baseUrl}/artist/top/song`
     axios.get(url, { params }).then((result) => {
       const data = result.data.songs
@@ -178,7 +183,13 @@ function registerSingerDetail(app) {
         const album = item.al.name
         const alId = item.al.id
         const songItem = {
-          singer, id, name, url, pic, album, alId
+          singer,
+          id,
+          name,
+          url,
+          pic,
+          album,
+          alId
         }
         songList.push(songItem)
       })
@@ -194,44 +205,46 @@ function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
     // console.log(req.body);
     let mid = req.body.mid
-    // console.log("mid", mid);
+
     let result = await process(mid)
     // console.log("result", result);
+    console.log('获取歌曲url');
+    console.log("mid", mid[0]);
     res.json({
       result: result,
-      code:CODE_OK
+      code: CODE_OK
     })
 
   })
+
   // 处理返回的id
   function process(item) {
-
+    console.log("processId :", item[0])
     const url = `${baseUrl}/song/url`
-
     const urlMap = {}
     let id = []
-    item.forEach((item) => {
+    item.forEach((listItem) => {
       // console.log("item", item)
-      id.push(item.id)
+      id.push(listItem.id)
     })
     id = id.join(',')
-    // console.log("id", id);
+    console.log("id", id);
     return axios.post(url, { id }).then((res) => {
       // console.log("res", res.data.data);
       const data = res.data.data
+      console.log("data", data[0]) // data 都一样是怎么回事呢
       data.forEach((info) => {
         //  以歌曲的id为key,存储歌曲URL
         // 这个urlMap是给前端用的，因为知道了每个id对应什么歌曲，那就可以遍历
         // 之前的歌曲列表，然后拿到每个歌曲的id,然后就能映射它的url是什么，
         // 就可以给他补充url信息了
-        urlMap[info.id]=(!info.url||info.url=='')?`https://music.163.com/song/media/outer/url?${info.id}=${info.id}.mp3`:info.url
+        urlMap[info.id] = (info.url == null) ? `https://music.163.com/song/media/outer/url?${info.id}=${info.id}.mp3` : info.url
       })
-      // console.log(urlMap);
+      // console.log("urlMap", urlMap);
       return urlMap
     })
   }
 }
-
 
 function mergeSinger(singer) {
   if (singer.length == 0 || !singer) {

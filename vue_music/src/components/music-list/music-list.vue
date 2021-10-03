@@ -62,9 +62,9 @@ export default {
     };
   },
   created() {
-    console.log(this.songs);
-    console.log(this.title);
-    console.log(this.pic);
+    // console.log(this.songs);
+    // console.log(this.title);
+    // console.log(this.pic);
   },
   computed: {
     bgImageStyle() {

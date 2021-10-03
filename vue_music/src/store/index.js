@@ -62,7 +62,7 @@ export default createStore({
       state.commit('setCurrentIndex', index)
     },
     randomPlay(state, list) {
-      console.log(list)
+      // console.log(list)
       state.commit('setPlayMode', PLAY_MODE.random);
       state.commit('setSequenceList', list)
       // 修改播放暂停或开始
