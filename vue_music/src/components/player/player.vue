@@ -13,10 +13,34 @@
         <h1 class="title">{{ currentSong.name }}</h1>
         <h1 class="subtitle">{{ currentSong.singer }}</h1>
       </div>
+      <div class="bottom">
+        <div class="operators">
+          <!--          循环-->
+          <div class="icon">
+            <i class="iconfont innerIcon icon-liebiaoxunhuan"></i>
+          </div>
+          <!--          上一曲-->
+          <div class="icon">
+            <i class="iconfont innerIcon icon-shangyiqu"></i>
+          </div>
+          <!--          播放暂停-->
+          <div class="icon">
+            <i class="iconfont innerIcon" :class="playIcon" @click="toggleIcon"></i>
+          </div>
+          <!--          下一曲-->
+          <div class="icon">
+            <i class="iconfont innerIcon icon-xiayiqu"></i>
+          </div>
+          <!--          喜欢-->
+          <div class="icon">
+            <i class="iconfont innerIcon icon-shoucang"></i>
+          </div>
 
+        </div>
+      </div>
     </div>
     <!--    控制歌曲播放-->
-    <audio ref="audioRef"></audio>
+    <audio ref="audioRef" @pause="pause"></audio>
   </div>
 </template>
 
@@ -24,8 +48,7 @@
 export default {
   name: "player",
   data() {
-    return {
-    }
+    return {}
   },
   computed: {
     // 希望fullScreen是响应式的
@@ -34,10 +57,31 @@ export default {
     },
     currentSong() {
       return this.$store.getters.currentSong
+    },
+    playing() {
+      return this.$store.state.playing
+    },
+    playIcon() {
+      console.log(this.playing)
+      return this.playing ? 'icon-bofangzhong' : 'icon-zanting'
     }
   },
   watch: {
-
+    currentSong(song) {
+      console.log(this.$refs.audioRef)
+      const audioEl = this.$refs.audioRef
+      audioEl.src = song.url
+      audioEl.play()
+    },
+    playing(newPlaying) {
+      console.log("newPlaying", newPlaying)
+      const audioEl = this.$refs.audioRef
+      if (newPlaying) {
+        audioEl.play()
+      } else {
+        audioEl.pause()
+      }
+    }
   },
   mounted() {
     // console.log(this.$store.state.fullScreen)
@@ -45,6 +89,14 @@ export default {
   methods: {
     goBack() {
       this.$store.commit("setFullScreen", false)
+    },
+    toggleIcon() {
+      // 不要直接修改playing 要修改vuex数据
+      this.$store.commit('setPlayingState', !this.playing)
+    },
+    // 音乐自己关闭的情况 不是用户交互触发它暂停
+    pause() {
+      this.$store.commit('setPlayingState', false)
     }
   }
 }
@@ -89,10 +141,11 @@ export default {
       .back {
         position: absolute;
         margin: 12px 0 0 12px;
+
         .icon-xiangxia {
           font-size: 30px;
           font-weight: bold;
-          color: #b2d372;
+          color: #a5f609;
         }
       }
 
@@ -107,6 +160,27 @@ export default {
       .subtitle {
         text-align: center;
         font-size: 20px;
+      }
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 50px;
+      width: 100%;
+
+      .operators {
+        display: flex;
+
+        .icon {
+          flex: 1;
+          text-align: center;
+          //这个直接用i也可
+          .innerIcon {
+            font-size: 30px;
+
+          }
+        }
+
       }
     }
   }
