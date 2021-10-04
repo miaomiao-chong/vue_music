@@ -53,7 +53,7 @@ function registerbanner(app) {
 // 推荐歌单
 function registerPlayslist(app) {
   app.get('/api/getPlaylist', (req, res) => {
-    console.log(123)
+    // console.log(123)
     const url = `${baseUrl}/top/playlist/highquality`
     const params = req.query
     params.limit = Number(params.limit)
@@ -217,7 +217,7 @@ function registerSongUrl(app) {
 
   // 处理返回的id
   function process(info) {
-    console.log("processId :", info[0])
+    // console.log("processId :", info[0])
     for (let i = 0; i < info.length; i++) {
       info[i].url = `https://music.163.com/song/media/outer/url?id=${info[i].id}.mp3`
     }

@@ -19,7 +19,7 @@ export default createStore({
   },
   getters: {
     currentSong(state) {
-      return state.playlist[state.currentIndex]
+      return state.playlist[state.currentIndex] || {}
     },
   },
   mutations: {
