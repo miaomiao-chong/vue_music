@@ -205,44 +205,22 @@ function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
     // console.log(req.body);
     let mid = req.body.mid
-
-    let result = await process(mid)
+    process(mid)
     // console.log("result", result);
     console.log('获取歌曲url');
     console.log("mid", mid[0]);
     res.json({
-      result: result,
+      result: mid,
       code: CODE_OK
     })
-
   })
 
   // 处理返回的id
-  function process(item) {
-    console.log("processId :", item[0])
-    const url = `${baseUrl}/song/url`
-    const urlMap = {}
-    let id = []
-    item.forEach((listItem) => {
-      // console.log("item", item)
-      id.push(listItem.id)
-    })
-    id = id.join(',')
-    console.log("id", id);
-    return axios.post(url, { id }).then((res) => {
-      // console.log("res", res.data.data);
-      const data = res.data.data
-      console.log("data", data[0]) // data 都一样是怎么回事呢
-      data.forEach((info) => {
-        //  以歌曲的id为key,存储歌曲URL
-        // 这个urlMap是给前端用的，因为知道了每个id对应什么歌曲，那就可以遍历
-        // 之前的歌曲列表，然后拿到每个歌曲的id,然后就能映射它的url是什么，
-        // 就可以给他补充url信息了
-        urlMap[info.id] = (info.url == null) ? `https://music.163.com/song/media/outer/url?${info.id}=${info.id}.mp3` : info.url
-      })
-      // console.log("urlMap", urlMap);
-      return urlMap
-    })
+  function process(info) {
+    console.log("processId :", info[0])
+    for (let i = 0; i < info.length; i++) {
+      info[i].url = `https://music.163.com/song/media/outer/url?id=${info[i].id}.mp3`
+    }
   }
 }
 
