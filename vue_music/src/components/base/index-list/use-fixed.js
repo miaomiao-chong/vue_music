@@ -1,7 +1,7 @@
 const { ref, watch, nextTick } = require('vue')
 export default function useFixed(props) {
   console.log(123456);
-  console.log(props);
+  // console.log(props);
   const groupRef = ref(null)
   const listHeights = ref([])
   watch(() => props.data, async () => {

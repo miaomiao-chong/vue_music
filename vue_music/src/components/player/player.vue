@@ -21,18 +21,19 @@
           </div>
           <!--          上一曲-->
           <div class="icon">
-            <i class="iconfont innerIcon icon-shangyiqu"></i>
+            <i class="iconfont innerIcon icon-shangyiqu" :class="disableCls" @click="pre"></i>
           </div>
           <!--          播放暂停-->
-          <div class="icon">
-            <i class="iconfont innerIcon" :class="playIcon" @click="toggleIcon"></i>
+          <div class="icon" :class="disableCls">
+            <i class="iconfont innerIcon" :class="[playIcon, disableCls]" @click="toggleIcon"
+               style="font-size: 50px"></i>
           </div>
           <!--          下一曲-->
-          <div class="icon">
-            <i class="iconfont innerIcon icon-xiayiqu"></i>
+          <div class="icon" :class="disableCls">
+            <i class="iconfont innerIcon icon-xiayiqu" :class="disableCls" @click="next"></i>
           </div>
           <!--          喜欢-->
-          <div class="icon">
+          <div class="icon" :class="disableCls">
             <i class="iconfont innerIcon icon-shoucang"></i>
           </div>
 
@@ -40,15 +41,18 @@
       </div>
     </div>
     <!--    控制歌曲播放-->
-    <audio ref="audioRef" @pause="pause"></audio>
+    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error"></audio>
   </div>
 </template>
 
 <script>
+let audioEl = null
 export default {
   name: "player",
   data() {
-    return {}
+    return {
+      songReady: false
+    }
   },
   computed: {
     // 希望fullScreen是响应式的
@@ -58,24 +62,39 @@ export default {
     currentSong() {
       return this.$store.getters.currentSong
     },
+    songListLen() {
+      // console.log(this.$store.state.songListLen)
+      return this.$store.state.songListLen
+    },
     playing() {
       return this.$store.state.playing
     },
+    currentIndex() {
+      return this.$store.state.currentIndex
+    },
     playIcon() {
-      console.log(this.playing)
+      // console.log(this.playing)
       return this.playing ? 'icon-bofangzhong' : 'icon-zanting'
+    },
+    // disable播放样式
+    disableCls() {
+      console.log("songready:----", this.songReady)
+      return this.songReady ? '' : 'disable'
     }
   },
   watch: {
     currentSong(song) {
-      console.log(this.$refs.audioRef)
-      const audioEl = this.$refs.audioRef
+      // 切换的时候也要换成false
+      this.songReady = false
+      // console.log(this.$refs.audioRef)
       audioEl.src = song.url
       audioEl.play()
     },
     playing(newPlaying) {
-      console.log("newPlaying", newPlaying)
-      const audioEl = this.$refs.audioRef
+      if (!this.songReady) {
+        return
+      }
+      // console.log("newPlaying", newPlaying)
       if (newPlaying) {
         audioEl.play()
       } else {
@@ -85,18 +104,79 @@ export default {
   },
   mounted() {
     // console.log(this.$store.state.fullScreen)
+    this.$nextTick(() => {
+      audioEl = this.$refs.audioRef
+    })
   },
   methods: {
     goBack() {
       this.$store.commit("setFullScreen", false)
     },
     toggleIcon() {
+      if (!this.songReady) {
+        return
+      }
       // 不要直接修改playing 要修改vuex数据
       this.$store.commit('setPlayingState', !this.playing)
     },
     // 音乐自己关闭的情况 不是用户交互触发它暂停
     pause() {
       this.$store.commit('setPlayingState', false)
+    },
+    // 上一曲
+    pre() {
+      if (this.songListLen === 0 || !this.songReady) {
+        return
+      }
+      if (this.songListLen === 1) {
+        this.loop()
+      } else {
+        let index = this.currentIndex - 1
+        if (index === -1) {
+          // console.log("this.songListLen", this.songListLen)
+          index = this.songListLen - 1
+          // console.log("index", index)
+        }
+        this.$store.commit('setCurrentIndex', index)
+        if (!this.playing) {
+          this.$store.commit('setPlayingState', true)
+        }
+      }
+    },
+    // 下一曲
+    next() {
+      console.log("songReady", this.songReady)
+      if (this.songListLen === 0 || !this.songReady) {
+        return
+      }
+      if (this.songListLen === 1) {
+        this.loop()
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.songListLen) {
+          index = 0
+        }
+        this.$store.commit('setCurrentIndex', index)
+        if (!this.playing) {
+          this.$store.commit('setPlayingState', true)
+        }
+      }
+    },
+    // 只有一首歌的情况单曲循环
+    loop() {
+      audioEl.currentTime = 0
+      audioEl.play()
+      this.$store.commit('setPlayingState', true)
+    },
+    // 加载完可以播放了
+    ready() {
+      console.log("缓冲数据")
+      this.songReady = true
+    },
+    // 播放出问题 防止出问题不能切换的情况
+    error() {
+      // alert('fdasfda')
+      this.songReady = true
     }
   }
 }
@@ -170,17 +250,22 @@ export default {
 
       .operators {
         display: flex;
+        height: 60px;
+        justify-content: space-evenly;
+        align-items: center;
 
         .icon {
-          flex: 1;
           text-align: center;
-          //这个直接用i也可
+          //justify-content: space-evenly;
+          //这个直接用i标签也可
+          .disable {
+            color: #bbbbb8;
+          }
+
           .innerIcon {
             font-size: 30px;
-
           }
         }
-
       }
     }
   }

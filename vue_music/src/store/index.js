@@ -6,6 +6,8 @@ export default createStore({
   state: {
     // 播放列表原始数据
     sequenceList: [],
+    // 歌曲列表长度，用处：上一曲下一曲
+    songListLen: 0,
     // 因为有播放模式 这个是实际播放列表
     playlist: [],
     // 是否正在播放
@@ -15,7 +17,7 @@ export default createStore({
     // 当前歌曲索引
     currentIndex: 0,
     // 全屏的还是收缩的
-    fullScreen: false
+    fullScreen: false,
   },
   getters: {
     currentSong(state) {
@@ -35,6 +37,10 @@ export default createStore({
     // 设置播放列表
     setPlaylist(state, list) {
       state.playlist = list
+    },
+    // 列表长度
+    setPlayListLen(state, list) {
+      state.songListLen = list.length
     },
     // 设置播放模式
     setPlayMode(state, mode) {
@@ -59,6 +65,7 @@ export default createStore({
       state.commit('setFullScreen', true)
       // 先不考虑随机播放 传入顺序播放列表
       state.commit('setPlaylist', list)
+      state.commit('setPlayListLen', list)
       state.commit('setCurrentIndex', index)
     },
     randomPlay(state, list) {
