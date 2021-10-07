@@ -34,7 +34,7 @@
           </div>
           <!--          喜欢-->
           <div class="icon" :class="disableCls">
-            <i class="iconfont innerIcon icon-shoucang"></i>
+            <i class="iconfont innerIcon icon-shoucang" :style="toggleLikeIcon" @click="toggleLike"></i>
           </div>
 
         </div>
@@ -46,14 +46,15 @@
 </template>
 
 <script>
-import { PLAY_MODE } from '@/assets/js/constant'
+import { FAVORITE_KEY, PLAY_MODE } from '@/assets/js/constant'
 
 let audioEl = null
 export default {
   name: "player",
   data: function () {
     return {
-      songReady: false
+      songReady: false,
+      islike: true
     }
   },
   computed: {
@@ -94,7 +95,13 @@ export default {
       const playMode = this.playMode
       // .icon-liebiaoxunhuan  .icon-shunxubofang .icon-suijibofang
       return playMode === PLAY_MODE.sequence ? 'icon-liebiaoxunhuan' : playMode === PLAY_MODE.loop ? 'icon-danquxunhuan' : 'icon-suijibofang'
-    }
+    },
+    toggleLikeIcon() {
+      const isLike = this.islike
+      return {
+        color: isLike ? 'red' : ''
+      }
+    },
   },
   watch: {
     currentSong(song) {
@@ -103,6 +110,17 @@ export default {
       // console.log(this.$refs.audioRef)
       audioEl.src = song.url
       audioEl.play()
+
+      // 这里是收藏有关逻辑
+      const storeLikelist = this.$store.state.likeList
+      const index = storeLikelist.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      if (index > -1) {
+        this.islike = true
+      } else {
+        this.islike = false
+      }
     },
     playing(newPlaying) {
       if (!this.songReady) {
@@ -115,6 +133,9 @@ export default {
         audioEl.pause()
       }
     }
+  },
+  created() {
+    this.$store.commit('setLikelist', JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
   },
   mounted() {
     // console.log(this.$store.state.fullScreen)
@@ -199,6 +220,44 @@ export default {
       const mode = (this.playMode + 1) % 3
       // console.log("----------mode-------------", mode)
       this.$store.dispatch('changeMode', mode)
+    },
+
+    // 收藏
+    toggleLike() {
+      this.islike = !this.islike
+      if (this.islike) {
+        this.unshiftLike()
+      } else {
+        this.removeLike()
+      }
+      console.log(JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
+    },
+    unshiftLike() {
+      // 如果点击收藏了以后
+      // 头部插入当前歌曲
+      const arr = JSON.parse(sessionStorage.getItem(FAVORITE_KEY)) || []
+      arr.unshift(this.currentSong)
+      // 新数组放到放到vuex和缓存
+      sessionStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
+      this.$store.commit('setLikelist', arr)
+    },
+    removeLike() {
+      if (this.islike) {
+        return
+      }
+      const currentSong = this.currentSong
+      const arr = JSON.parse(sessionStorage.getItem(FAVORITE_KEY))
+      console.log("删除")
+      console.log(arr, currentSong)
+      // 注意
+      const index = arr.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      if (index > -1) {
+        arr.splice(index, 1)
+      }
+      sessionStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
+      this.$store.commit('setLikelist', arr)
     }
   }
 }

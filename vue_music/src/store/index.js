@@ -18,6 +18,7 @@ export default createStore({
     currentIndex: 0,
     // 全屏的还是收缩的
     fullScreen: false,
+    likeList: []
   },
   getters: {
     currentSong(state) {
@@ -51,6 +52,9 @@ export default createStore({
     },
     setFullScreen(state, fullScreen) {
       state.fullScreen = fullScreen
+    },
+    setLikelist(state, likelist) {
+      state.likeList = likelist
     }
   },
   // actions:对多个mutations的封装
@@ -83,7 +87,8 @@ export default createStore({
     },
     changeMode({
                  state,
-                 commit, getters
+                 commit,
+                 getters
                }, mode) {
       // console.log("mode", mode)
       // console.log("state.mode", state.playMode)
