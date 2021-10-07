@@ -17,7 +17,7 @@
         <div class="operators">
           <!--          循环-->
           <div class="icon">
-            <i class="iconfont innerIcon icon-liebiaoxunhuan"></i>
+            <i class="iconfont innerIcon" :class="modeIcon" @click="changeMode"></i>
           </div>
           <!--          上一曲-->
           <div class="icon">
@@ -46,10 +46,12 @@
 </template>
 
 <script>
+import { PLAY_MODE } from '@/assets/js/constant'
+
 let audioEl = null
 export default {
   name: "player",
-  data() {
+  data: function () {
     return {
       songReady: false
     }
@@ -80,6 +82,18 @@ export default {
     disableCls() {
       console.log("songready:----", this.songReady)
       return this.songReady ? '' : 'disable'
+    },
+
+    // mode
+    // 获取播放模式
+    playMode() {
+      return this.$store.state.playMode
+    },
+    // 格局播放模式计算出icon
+    modeIcon() {
+      const playMode = this.playMode
+      // .icon-liebiaoxunhuan  .icon-shunxubofang .icon-suijibofang
+      return playMode === PLAY_MODE.sequence ? 'icon-liebiaoxunhuan' : playMode === PLAY_MODE.loop ? 'icon-danquxunhuan' : 'icon-suijibofang'
     }
   },
   watch: {
@@ -177,6 +191,14 @@ export default {
     error() {
       // alert('fdasfda')
       this.songReady = true
+    },
+
+    changeMode() {
+      // 妙 对3取余，这样就是[0,2]的值
+      // const mode = 2
+      const mode = (this.playMode + 1) % 3
+      // console.log("----------mode-------------", mode)
+      this.$store.dispatch('changeMode', mode)
     }
   }
 }

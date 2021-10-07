@@ -56,7 +56,10 @@ export default createStore({
   // actions:对多个mutations的封装
   actions: {
     // 第二个参数：一个是列表一个是索引
-    selectPlay(state, { list, index }) {
+    selectPlay(state, {
+      list,
+      index
+    }) {
       // commit 可以解构出来
       state.commit('setPlayMode', PLAY_MODE.sequence);
       state.commit('setSequenceList', list)
@@ -77,6 +80,26 @@ export default createStore({
       state.commit('setFullScreen', true)
       state.commit('setPlaylist', shuffle(list))
       state.commit('setCurrentIndex', 0)
+    },
+    changeMode({
+                 state,
+                 commit, getters
+               }, mode) {
+      // console.log("mode", mode)
+      // console.log("state.mode", state.playMode)
+      // console.log("state.sequenceList---------------", state.sequenceList)
+      const currentId = getters.currentSong.id
+      if (mode === PLAY_MODE.random) {
+        console.log('state.sequenceList', state.sequenceList)
+        commit('setPlaylist', shuffle(state.sequenceList))
+      } else {
+        commit('setPlaylist', state.sequenceList)
+      }
+      const index = state.playlist.findIndex((song) => {
+        return song.id === currentId
+      })
+      commit('setCurrentIndex', index)
+      commit('setPlayMode', mode)
     }
   },
   modules: {}
