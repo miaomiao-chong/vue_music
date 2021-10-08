@@ -36,7 +36,6 @@
           <div class="icon" :class="disableCls">
             <i class="iconfont innerIcon icon-shoucang" :style="toggleLikeIcon" @click="toggleLike"></i>
           </div>
-
         </div>
       </div>
     </div>
@@ -135,7 +134,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit('setLikelist', JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
+    // this.$store.commit('setLikelist', JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
   },
   mounted() {
     // console.log(this.$store.state.fullScreen)

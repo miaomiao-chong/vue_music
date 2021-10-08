@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { PLAY_MODE } from "@/assets/js/constant";
+import { FAVORITE_KEY, PLAY_MODE } from "@/assets/js/constant";
 import { shuffle } from "@/assets/js/utils";
 
 export default createStore({
@@ -18,7 +18,7 @@ export default createStore({
     currentIndex: 0,
     // 全屏的还是收缩的
     fullScreen: false,
-    likeList: []
+    likeList: JSON.parse(sessionStorage.getItem(FAVORITE_KEY)) || []
   },
   getters: {
     currentSong(state) {
