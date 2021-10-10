@@ -51,7 +51,7 @@
       </div>
     </div>
     <!--    控制歌曲播放-->
-    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error" @timeupdate='update'></audio>
+    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error" @timeupdate='update' @ended="end"></audio>
   </div>
 </template>
 
@@ -225,6 +225,7 @@ export default {
     loop() {
       audioEl.currentTime = 0
       audioEl.play()
+      // 播放完以后会自动触发pause 我们需要他自动播放
       this.$store.commit('setPlayingState', true)
     },
     // 加载完可以播放了
@@ -288,8 +289,8 @@ export default {
     // 播放进度相关
     update(e) {
       if (!this.progressChanging) {
-      this.currentTime = e.target.currentTime;
-      // console.log(this.currentTime)
+        this.currentTime = e.target.currentTime;
+        // console.log(this.currentTime)
       }
     },
     formatTime(interval) {
@@ -322,6 +323,15 @@ export default {
         this.$store.commit("setPlayingState", true)
       }
     },
+    end(e) {
+      console.log("end")
+      this.currentTime = 0
+      if (this.playMode === PLAY_MODE.loop) {
+        this.loop()
+      } else {
+        this.next()
+      }
+    }
   }
 }
 </script>
