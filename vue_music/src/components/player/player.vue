@@ -14,6 +14,17 @@
         <h1 class="subtitle">{{ currentSong.singer }}</h1>
       </div>
       <div class="bottom">
+        <!--        进度条-->
+        <div class="progress-wrapper">
+          <span class="time time-l">{{ formatTime(currentTime) }}</span>
+          <div class="progress-bar-wrapper">
+            <progress-bar :progress=progress
+                          @progress-changing="onProgressChanging"
+                          @progress-changed='progressChanged'>
+            </progress-bar>
+          </div>
+          <span class="time time-l">{{ formatTime(duration) }}</span>
+        </div>
         <div class="operators">
           <!--          循环-->
           <div class="icon">
@@ -40,20 +51,28 @@
       </div>
     </div>
     <!--    控制歌曲播放-->
-    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error"></audio>
+    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error" @timeupdate='update'></audio>
   </div>
 </template>
 
 <script>
 import { FAVORITE_KEY, PLAY_MODE } from '@/assets/js/constant'
+import progressBar from './progress-bar'
+// import { formatTime } from "@/assets/js/utils";
 
 let audioEl = null
 export default {
   name: "player",
+  components: {
+    progressBar: progressBar
+  },
   data: function () {
     return {
       songReady: false,
-      islike: true
+      islike: true,
+      currentTime: 0,
+      duration: 0,
+      progressChanging: false, // 解决拖动进度条的问题
     }
   },
   computed: {
@@ -80,7 +99,7 @@ export default {
     },
     // disable播放样式
     disableCls() {
-      console.log("songready:----", this.songReady)
+      // console.log("songready:----", this.songReady)
       return this.songReady ? '' : 'disable'
     },
 
@@ -101,15 +120,20 @@ export default {
         color: isLike ? 'red' : ''
       }
     },
+    // 进度相关
+    progress() {
+      // console.log("---", this.currentTime, ' ,', this.duration)
+      return this.currentTime / this.duration
+    },
   },
   watch: {
     currentSong(song) {
+      this.currentTime = 0
       // 切换的时候也要换成false
       this.songReady = false
       // console.log(this.$refs.audioRef)
       audioEl.src = song.url
       audioEl.play()
-
       // 这里是收藏有关逻辑
       const storeLikelist = this.$store.state.likeList
       const index = storeLikelist.findIndex((item) => {
@@ -140,6 +164,7 @@ export default {
     // console.log(this.$store.state.fullScreen)
     this.$nextTick(() => {
       audioEl = this.$refs.audioRef
+      // console.log("vue", this.$el)
     })
   },
   methods: {
@@ -179,7 +204,7 @@ export default {
     },
     // 下一曲
     next() {
-      console.log("songReady", this.songReady)
+      // console.log("songReady", this.songReady)
       if (this.songListLen === 0 || !this.songReady) {
         return
       }
@@ -203,9 +228,11 @@ export default {
       this.$store.commit('setPlayingState', true)
     },
     // 加载完可以播放了
-    ready() {
+    ready(e) {
       console.log("缓冲数据")
       this.songReady = true
+      // 歌曲播放总时长
+      this.duration = e.target.duration
     },
     // 播放出问题 防止出问题不能切换的情况
     error() {
@@ -229,7 +256,7 @@ export default {
       } else {
         this.removeLike()
       }
-      console.log(JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
+      // console.log(JSON.parse(sessionStorage.getItem(FAVORITE_KEY)))
     },
     unshiftLike() {
       // 如果点击收藏了以后
@@ -257,7 +284,44 @@ export default {
       }
       sessionStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
       this.$store.commit('setLikelist', arr)
-    }
+    },
+    // 播放进度相关
+    update(e) {
+      if (!this.progressChanging) {
+      this.currentTime = e.target.currentTime;
+      // console.log(this.currentTime)
+      }
+    },
+    formatTime(interval) {
+      // interval 向下取整
+      interval = interval | 0
+      // 不足两位的话就向前填充一个0
+      let minute = ((interval / 60 | 0) + '')
+      let second = ((interval % 60 | 0) + '')
+      let len = minute.length
+      for (; len < 2; len++) {
+        minute = '0' + minute
+      }
+      len = second.length
+      for (; len < 2; len++) {
+        second = '0' + second
+      }
+      return `${minute}:${second}`
+    },
+    onProgressChanging(e) {
+      // console.log("onProgressChanging", e);
+      this.progressChanging = true
+      // 实时修改currentTime值
+      this.currentTime = this.duration * e
+    },
+    progressChanged(e) {
+      // console.log(e);
+      this.progressChanging = false
+      audioEl.currentTime = this.currentTime = this.duration * e
+      if (!this.playing) {
+        this.$store.commit("setPlayingState", true)
+      }
+    },
   }
 }
 </script>
@@ -327,6 +391,34 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+
+      .progress-wrapper {
+        display: flex;
+        width: 80%;
+        padding: 10px 0;
+        align-items: center;
+        margin: 0 auto;
+
+        .time {
+          width: 40px;
+          flex: 0 0 40px;
+          font-size: 8px;
+          margin: 0 auto;
+          padding: 0 8px;
+
+          .time-l {
+            text-align: left;
+          }
+
+          .time-l {
+            text-align: right;
+          }
+        }
+
+        .progress-bar-wrapper {
+          flex: 1;
+        }
+      }
 
       .operators {
         display: flex;
