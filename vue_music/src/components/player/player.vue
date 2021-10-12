@@ -4,7 +4,7 @@
          v-show="fullScreen"
     >
       <div class="background">
-        <img :src="currentSong.pic"/>
+        <img :src="currentSong.pic"  />
       </div>
       <div class="top">
         <div class="back" @click="goBack">
@@ -12,6 +12,11 @@
         </div>
         <h1 class="title">{{ currentSong.name }}</h1>
         <h1 class="subtitle">{{ currentSong.singer }}</h1>
+      </div>
+      <div class="middle">
+        <div class="cd-wrapper">
+          <img :src="currentSong.pic" class="cd-image" :style="animationState">
+        </div>
       </div>
       <div class="bottom">
         <!--        进度条-->
@@ -125,6 +130,13 @@ export default {
       // console.log("---", this.currentTime, ' ,', this.duration)
       return this.currentTime / this.duration
     },
+    // 图片旋转相关
+    animationState() {
+      return {
+        animationPlayState: this.playing ? 'running' : 'paused'
+      }
+    }
+
   },
   watch: {
     currentSong(song) {
@@ -394,6 +406,43 @@ export default {
       .subtitle {
         text-align: center;
         font-size: 20px;
+      }
+    }
+
+    .middle {
+      position: fixed;
+      top: 100px;
+      bottom: 180px;
+      width: 100%;
+      overflow: hidden;
+
+      .cd-wrapper {
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        width: 350px;
+        height: 350px;
+
+        .cd-image {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          border-radius: 50%;
+          border: 10px solid rgba(255, 255, 255, 0.1);
+          //动画
+          animation: rotateImg 10s linear infinite;
+        }
+        @keyframes rotateImg {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
       }
     }
 
