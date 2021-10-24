@@ -1,5 +1,5 @@
 <template>
-  <div class="player">
+  <div class="player" v-show="playList.length">
     <div class="normal-player"
          v-show="fullScreen"
     >
@@ -76,6 +76,8 @@
         </div>
       </div>
     </div>
+
+    <mini-player></mini-player>
     <!--    控制歌曲播放-->
     <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error" @timeupdate='update' @ended="end"
            volume="0.1"></audio>
@@ -88,6 +90,7 @@ import progressBar from './progress-bar'
 import scroll from '@/components/base/scroll/scroll'
 import { getLyric } from "@/service/song";
 import Lyric from "@/components/player/lyric-parser";
+import miniPlayer from './mini-player'
 // import { formatTime } from "@/assets/js/utils";
 
 let audioEl = null
@@ -98,7 +101,8 @@ export default {
   name: "player",
   components: {
     progressBar: progressBar,
-    scroll: scroll
+    scroll: scroll,
+    miniPlayer: miniPlayer
   },
   data: function () {
     return {
@@ -119,6 +123,9 @@ export default {
     }
   },
   computed: {
+    playList() {
+      return this.$store.state.playlist
+    },
     // 希望fullScreen是响应式的
     fullScreen() {
       return this.$store.state.fullScreen

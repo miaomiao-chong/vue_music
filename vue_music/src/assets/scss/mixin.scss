@@ -4,3 +4,10 @@
     background-image: url($url + "@3x.png");
   }
 }
+
+// 禁止折行
+@mixin no-wrap() {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
