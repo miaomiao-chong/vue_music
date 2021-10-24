@@ -5,7 +5,6 @@ import { onMounted, ref, onUnmounted } from '_vue@3.2.6@vue'
 BScroll.use(ObserveDom)
 export default function useScroll(wrapperRef, options, emit) {
   const scroll = ref(null)
-
   onMounted(() => {
     // debugger
     scroll.value = new BScroll(wrapperRef.value, {
@@ -20,8 +19,8 @@ export default function useScroll(wrapperRef, options, emit) {
       })
     }
   })
-
   onUnmounted(() => {
     scroll.value.destroy()
   })
+  return scroll
 }

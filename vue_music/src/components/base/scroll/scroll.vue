@@ -7,6 +7,7 @@
 <script>
 import useScroll from "./use-scroll";
 import { ref } from "vue";
+
 export default {
   name: "Scroll",
   props: {
@@ -24,9 +25,10 @@ export default {
   setup(props, { emit }) {
     const rootRef = ref(null);
     // 传递一个容器，一个配置参数props
-    useScroll(rootRef, props, emit);
+    const scroll = useScroll(rootRef, props, emit);
     return {
       rootRef,
+      scroll
     };
   },
 };

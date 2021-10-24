@@ -1,4 +1,4 @@
-import { post } from './base'
+import { post, get } from './base'
 
 export function getSongUrl(songs) {
   return post('/api/getSongUrl', songs).then((res) => {
@@ -7,4 +7,8 @@ export function getSongUrl(songs) {
     // console.log("songs=====", songs)
     return res
   });
+}
+
+export function getLyric(id) {
+  return get('/api/getLyric', id)
 }

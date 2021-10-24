@@ -22,6 +22,9 @@ module.exports = {
     'quotes': 'off',
     'vue/no-unused-components': 'off',
     'no-trailing-spaces':'off',
-    'eol-last':'off'
+    'eol-last':'off',
+    'prefer-const':'off',
+    'no-mixed-operators': 'off',
+    'dot-notation':'off'
   }
 }

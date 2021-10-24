@@ -11,7 +11,8 @@ function registerRouter(app) {
     registerPlayslist(app),
     registerSingerList(app),
     registerSingerDetail(app),
-    registerSongUrl(app)
+    registerSongUrl(app),
+    registerLyric(app)
 }
 
 // 推荐slider
@@ -169,7 +170,7 @@ function registerSingerDetail(app) {
   app.get('/api/getSingerDetail', (req, res) => {
     console.log("歌手点击进去歌手歌曲页面")
     const params = req.query
-    console.log(params)
+    // console.log(params)
     const url = `${baseUrl}/artist/top/song`
     axios.get(url, { params }).then((result) => {
       const data = result.data.songs
@@ -207,8 +208,8 @@ function registerSongUrl(app) {
     let mid = req.body.mid
     process(mid)
     // console.log("result", result);
-    console.log('获取歌曲url');
-    console.log("mid", mid[0]);
+    // console.log('获取歌曲url');
+    // console.log("mid", mid[0]);
     res.json({
       result: mid,
       code: CODE_OK
@@ -224,8 +225,22 @@ function registerSongUrl(app) {
   }
 }
 
+function registerLyric(app) {
+  app.get('/api/getLyric', (req, res) => {
+    const params = req.query
+    const url = `${baseUrl}/lyric`
+    axios.get(url, { params }).then((result) => {
+      // console.log(result.data)
+      res.json({
+        code: CODE_OK,
+        result: (result.data.lrc && result.data.lrc.lyric) || ''
+      })
+    })
+  })
+}
+
 function mergeSinger(singer) {
-  if (singer.length == 0 || !singer) {
+  if (singer.length === 0 || !singer) {
     return
   }
   const singerMerge = []
