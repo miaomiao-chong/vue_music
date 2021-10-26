@@ -10,13 +10,26 @@
         <h2 class="name">{{ currentSong.name }}</h2>
         <p class="desc">{{ currentSong.singer }}</p>
       </div>
+      <Progress :percentage="progress*100"></Progress>
     </div>
   </transition>
 </template>
 
 <script>
+import progress from '@/components/base/progress/progress'
+
 export default {
+
   name: "mini-player",
+  props: {
+    progress: {
+      type: Number,
+      default: 0,
+    }
+  },
+  components: {
+    Progress: progress
+  },
   computed: {
     playing() {
       return this.$store.state.playing || []

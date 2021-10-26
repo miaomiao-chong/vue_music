@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <mini-player></mini-player>
+    <mini-player :progress="progress"></mini-player>
     <!--    控制歌曲播放-->
     <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error" @timeupdate='update' @ended="end"
            volume="0.1"></audio>
