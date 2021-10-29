@@ -1,7 +1,7 @@
 <template>
 <!--  注意阻止冒泡-->
   <div class="progressContainer" @click.stop="handleIsplay">
-    <el-progress type="circle" :percentage="percentage" color="yellow" :width=41 :strokeWidth=2
+    <el-progress type="circle" :percentage="percentage" color="yellow" :width=38 :strokeWidth=2
                  :showText="false" ></el-progress>
     <i v-if="!isPlay" class="iconfont icon-24gl-play playIcon"></i>
     <i v-else class="iconfont icon-24gl-pause playIcon"></i>
