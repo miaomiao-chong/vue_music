@@ -77,7 +77,10 @@ export default {
   mounted() {
     this.sliderShow = false
   },
-
+  unmounted() {
+    console.log("unmounted")
+    slider && slider.destroy()
+  },
   watch: {
     async sliderShow() {
       await nextTick()
@@ -93,20 +96,29 @@ export default {
             loop: true
           }
         })
+        slider.on('slidePageChanged', (page) => {
+          // currentPageIndex = page.pageX
+          this.$store.commit('setCurrentIndex', page.pageX)
+          // 如果暂停了以后滑动到下一首，playing依然为false 需要把它变成true 来控制按钮的变化
+          this.$store.commit('setPlayingState', true)
+        })
       } else {
         slider.refresh()
       }
       slider.goToPage(this.currentIndex, 0, 0)
     },
     currentIndex(currentIndex) {
-      slider.goToPage(currentIndex, 0, 0)
+      // console.log("fdasfdasfd")
+      if (slider && this.sliderShow) {
+        slider.goToPage(currentIndex, 0, 0)
+      }
     }
   },
   methods: {
     showNormalPlayer() {
       this.$store.commit('setFullScreen', true)
     }
-  }
+  },
 
 }
 </script>
