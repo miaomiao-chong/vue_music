@@ -25,8 +25,10 @@
         </div>
       </div>
       <Progress :percentage="progress*100" class="progress"></Progress>
+      <i class="iconfont icon-caidan list" @click="showPlaylist"></i>
     </div>
   </transition>
+  <Playlist ref="playlistRef"></Playlist>
 </template>
 
 <script>
@@ -34,6 +36,7 @@ import progress from '@/components/base/progress/progress'
 import BScroll from "@better-scroll/core";
 import Slide from "@better-scroll/slide";
 import { nextTick } from "vue";
+import playlist from "@/components/player/playlist";
 
 let slider
 BScroll.use(Slide)
@@ -47,7 +50,8 @@ export default {
     }
   },
   components: {
-    Progress: progress
+    Progress: progress,
+    Playlist: playlist
   },
   computed: {
     playing() {
@@ -117,6 +121,9 @@ export default {
   methods: {
     showNormalPlayer() {
       this.$store.commit('setFullScreen', true)
+    },
+    showPlaylist() {
+      this.$refs.playlistRef.show()
     }
   },
 
@@ -213,11 +220,11 @@ export default {
       }
 
     }
+  }
 
-    .progress {
-      flex: 1;
-    }
-
+  .icon-caidan {
+    font-size: 34px;
+    padding-left: 10px;
   }
 
   &.mini-enter-active, &.mini-leave-active {
