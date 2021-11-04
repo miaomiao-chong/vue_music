@@ -352,10 +352,10 @@ export default {
     unshiftLike() {
       // 如果点击收藏了以后
       // 头部插入当前歌曲
-      const arr = JSON.parse(sessionStorage.getItem(FAVORITE_KEY)) || []
+      const arr = JSON.parse(localStorage.getItem(FAVORITE_KEY)) || []
       arr.unshift(this.currentSong)
       // 新数组放到放到vuex和缓存
-      sessionStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
+      localStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
       this.$store.commit('setLikelist', arr)
     },
     removeLike() {
@@ -363,7 +363,7 @@ export default {
         return
       }
       const currentSong = this.currentSong
-      const arr = JSON.parse(sessionStorage.getItem(FAVORITE_KEY))
+      const arr = JSON.parse(localStorage.getItem(FAVORITE_KEY))
       console.log("删除")
       console.log(arr, currentSong)
       // 注意
@@ -373,7 +373,7 @@ export default {
       if (index > -1) {
         arr.splice(index, 1)
       }
-      sessionStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
+      localStorage.setItem(FAVORITE_KEY, JSON.stringify(arr))
       this.$store.commit('setLikelist', arr)
     },
     // 播放进度相关
@@ -464,7 +464,7 @@ export default {
       const listEl = this.$refs.lyricListRef
       // const lineEl = listEl.children[0]
       // const lineHeight = lineEl.clientHeight
-      console.log(scrollComp)
+      // console.log(scrollComp)
       // if (lineNum > 4) {
       //   scrollComp.scroll.scrollTo(0, -lineHeight * (lineNum - 4), 1000)
       // }

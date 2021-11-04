@@ -18,7 +18,7 @@ export default createStore({
     currentIndex: 0,
     // 全屏的还是收缩的
     fullScreen: false,
-    likeList: JSON.parse(sessionStorage.getItem(FAVORITE_KEY)) || []
+    likeList: JSON.parse(localStorage.getItem(FAVORITE_KEY)) || []
   },
   getters: {
     currentSong(state) {
