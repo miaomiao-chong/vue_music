@@ -25,7 +25,7 @@
         </div>
       </div>
       <Progress :percentage="progress*100" class="progress"></Progress>
-      <i class="iconfont icon-caidan list" @click="showPlaylist"></i>
+      <i class="iconfont icon-caidan list" @click.stop="showPlaylist"></i>
     </div>
   </transition>
   <Playlist ref="playlistRef"></Playlist>
@@ -101,12 +101,14 @@ export default {
           }
         })
         slider.on('slidePageChanged', (page) => {
+          console.log("sliderPageChange")
           // currentPageIndex = page.pageX
           this.$store.commit('setCurrentIndex', page.pageX)
           // 如果暂停了以后滑动到下一首，playing依然为false 需要把它变成true 来控制按钮的变化
-          this.$store.commit('setPlayingState', true)
+          // this.$store.commit('setPlayingState', true)  // 后面playlist的删除逻辑有bug 需要注释掉 在currentSong变化的时候执行这一句
         })
       } else {
+        console.log("-------refresh---------")
         slider.refresh()
       }
       slider.goToPage(this.currentIndex, 0, 0)

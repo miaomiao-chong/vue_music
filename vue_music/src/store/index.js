@@ -105,7 +105,33 @@ export default createStore({
       })
       commit('setCurrentIndex', index)
       commit('setPlayMode', mode)
-    }
+    },
+    removeSong({ commit, state }, song) {
+      const sequenceList = state.sequenceList.slice()
+      const playlist = state.playlist.slice()
+
+      const sequenceIndex = getIndex(sequenceList, song)
+      const playlistIndex = getIndex(playlist, song)
+      sequenceList.splice(sequenceIndex, 1)
+      playlist.splice(playlistIndex, 1)
+      // 解决删除歌曲bug
+      let currentIndex = state.currentIndex
+      if (playlistIndex < currentIndex || currentIndex === playlist.length) {
+        currentIndex--
+      }
+
+      commit('setSequenceList', sequenceList)
+      commit('setPlaylist', playlist)
+      commit('setCurrentIndex', currentIndex)
+      console.log("this", this)
+
+      function getIndex(list, song) {
+        return list.findIndex((item) => {
+          return item.id === song.id
+        })
+      }
+    },
+
   },
   modules: {}
 })

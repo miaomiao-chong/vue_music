@@ -128,6 +128,7 @@ export default {
     },
     // 希望fullScreen是响应式的
     fullScreen() {
+      console.log(this.$store.state.fullScreen)
       return this.$store.state.fullScreen
     },
     currentSong() {
@@ -227,6 +228,7 @@ export default {
       if (this.songReady === false) {
         this.stopLyric()
       }
+      this.$store.commit("setPlayingState", true)
     },
     playing(newPlaying) {
       if (!this.songReady) {

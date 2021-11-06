@@ -11,14 +11,24 @@
             </h1>
           </div>
           <scroll class="list-content" ref="scrollRef">
-            <ul>
-              <li class="item" v-for="song in sequenceList" :key="song.id">
+<!--            <ul>-->
+<!--              <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectSong(song)">-->
+<!--                <span class="text" :class="{'playItem': song.id==currentSong.id}">{{ song.name }}</span>-->
+<!--                <span class="favorite" @click.stop="toggleLike(song)">-->
+<!--                  <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>-->
+<!--                </span>-->
+<!--                <span class="deleteIcon" @click.stop="deleteItem(song)">X</span>-->
+<!--              </li>-->
+<!--            </ul>-->
+            <transition-group name="list" tag="ul">
+              <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectSong(song)">
                 <span class="text" :class="{'playItem': song.id==currentSong.id}">{{ song.name }}</span>
                 <span class="favorite" @click.stop="toggleLike(song)">
-                  <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>
-                </span>
+                              <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>
+                            </span>
+                <span class="deleteIcon" @click.stop="deleteItem(song)">X</span>
               </li>
-            </ul>
+            </transition-group>
           </scroll>
         </div>
       </div>
@@ -39,6 +49,7 @@ export default {
     }
   },
   mounted() {
+    // console.log(Object.prototype.toString.call(this.test))
   },
   computed: {
     playlist() {
@@ -64,6 +75,9 @@ export default {
     }
   },
   methods: {
+    // test() {
+    //   return 'fdadfas'
+    // },
     hide() {
       this.visible = false
     },
@@ -76,13 +90,20 @@ export default {
     },
     refreshScroll() {
       // 这里的scroll 就是Bscroll的实例
-      console.log("refresh")
+      // console.log("refresh")
       this.$refs.scrollRef.scroll.refresh()
     },
     changeMode() {
       const mode = (this.$store.state.playMode + 1) % 3
       // console.log("----------mode-------------", mode)
       this.$store.dispatch('changeMode', mode)
+    },
+    selectSong(song) {
+      const index = this.playlist.findIndex((item) => {
+        return item.id === song.id
+      })
+      this.$store.commit('setCurrentIndex', index)
+      this.$store.commit("setPlayingState", true)
     },
     // 这里以后要优化 和player里的切换收藏操作相似
     toggleLike(song) {
@@ -132,6 +153,9 @@ export default {
       return this.favoriteList.findIndex((item) => {
         return item.id === song.id
       }) > -1
+    },
+    deleteItem(song) {
+      this.$store.dispatch('removeSong', song)
     }
   }
 }
@@ -194,9 +218,11 @@ export default {
         padding: 0 30px 0 40px;
         overflow: hidden;
         color: #bbbbb8;
-        .playItem{
+
+        .playItem {
           color: #e8a52e;
         }
+
         .text {
           //color: #954e4e;
           flex: 1;
@@ -204,16 +230,35 @@ export default {
 
         .favorite {
           position: relative;
-
+          margin-right: 10px;
           &:before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
           }
         }
+        .deleteIcon {
+          margin-left: 5px;
+          position: relative;
+          &:before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+          }
+        }
+      }
+      .list-enter-active, .list-leave-active {
+        transition: all .3s;
+      }
+
+      .list-enter-from, .list-leave-to {
+        height: 0 !important;
       }
     }
   }
