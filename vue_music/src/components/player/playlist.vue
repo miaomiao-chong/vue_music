@@ -11,22 +11,22 @@
             </h1>
           </div>
           <scroll class="list-content" ref="scrollRef">
-<!--            <ul>-->
-<!--              <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectSong(song)">-->
-<!--                <span class="text" :class="{'playItem': song.id==currentSong.id}">{{ song.name }}</span>-->
-<!--                <span class="favorite" @click.stop="toggleLike(song)">-->
-<!--                  <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>-->
-<!--                </span>-->
-<!--                <span class="deleteIcon" @click.stop="deleteItem(song)">X</span>-->
-<!--              </li>-->
-<!--            </ul>-->
+            <!--            <ul>-->
+            <!--              <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectSong(song)">-->
+            <!--                <span class="text" :class="{'playItem': song.id==currentSong.id}">{{ song.name }}</span>-->
+            <!--                <span class="favorite" @click.stop="toggleLike(song)">-->
+            <!--                  <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>-->
+            <!--                </span>-->
+            <!--                <span class="deleteIcon" @click.stop="deleteItem(song)">X</span>-->
+            <!--              </li>-->
+            <!--            </ul>-->
             <transition-group name="list" tag="ul">
               <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectSong(song)">
                 <span class="text" :class="{'playItem': song.id==currentSong.id}">{{ song.name }}</span>
                 <span class="favorite" @click.stop="toggleLike(song)">
                               <i class="iconfont icon-shoucang" :style="getFavoriteIcon(song)"></i>
                             </span>
-                <span class="deleteIcon" @click.stop="deleteItem(song)">X</span>
+                <span class="deleteIcon" @click.stop="deleteItem(song)" :class="{'disable':removing}">X</span>
               </li>
             </transition-group>
           </scroll>
@@ -45,7 +45,8 @@ export default {
   components: { Scroll },
   data() {
     return {
-      visible: false
+      visible: false,
+      removing: false
     }
   },
   mounted() {
@@ -155,7 +156,14 @@ export default {
       }) > -1
     },
     deleteItem(song) {
+      if (this.removing) {
+        return
+      }
+      this.removing = true
       this.$store.dispatch('removeSong', song)
+      setTimeout(() => {
+        this.removing = false
+      }, 300)
     }
   }
 }
@@ -231,6 +239,7 @@ export default {
         .favorite {
           position: relative;
           margin-right: 10px;
+
           &:before {
             content: '';
             position: absolute;
@@ -240,9 +249,11 @@ export default {
             bottom: -5px;
           }
         }
+
         .deleteIcon {
           margin-left: 5px;
           position: relative;
+
           &:before {
             content: '';
             position: absolute;
@@ -251,6 +262,10 @@ export default {
             right: -5px;
             bottom: -5px;
           }
+        }
+
+        .disable {
+          color: #6f6f6c;
         }
       }
       .list-enter-active, .list-leave-active {

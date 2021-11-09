@@ -112,6 +112,10 @@ export default createStore({
 
       const sequenceIndex = getIndex(sequenceList, song)
       const playlistIndex = getIndex(playlist, song)
+      if (playlistIndex < 0 || sequenceList < 0) {
+        // 做一层保护，currentIndex就不会被修改成奇怪的值
+        return
+      }
       sequenceList.splice(sequenceIndex, 1)
       playlist.splice(playlistIndex, 1)
       // 解决删除歌曲bug

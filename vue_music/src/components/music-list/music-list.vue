@@ -104,6 +104,7 @@ export default {
     scrollStyle() {
       return {
         top: `${this.imageHeight}px`,
+        bottom: this.$store.state.playlist.length ? '60px' : ''
       };
     },
     filterStyle() {
