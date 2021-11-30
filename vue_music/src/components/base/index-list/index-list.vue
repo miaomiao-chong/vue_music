@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Scroll from "@/components/base/scroll/scroll";
+import Scroll from "@/components/wrap-scroll/index";
 const heightArr = [];
 const TITLE_HEIGHT = 20;
 // let currentIndex = 0;
@@ -157,7 +157,7 @@ export default {
     .fixed-title {
       font-size: 12px;
       padding-left: 7px;
-      line-height: 30px;  
+      line-height: 30px;
     }
   }
 }

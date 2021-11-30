@@ -31,7 +31,8 @@
 </template>
 
 <script>
-import Scroll from "@/components/base/scroll/scroll";
+// import Scroll from "@/components/base/scroll/scroll";
+import Scroll from "@/components/wrap-scroll/index";
 import SongList from "@/components/base/song-list/song-list";
 
 // import Scroll from "../base/scroll/scroll.vue";

@@ -6,7 +6,6 @@
       <transition appear name="slide">
         <component :is="Component" :singer="selectedSinger" />
       </transition>
-
     </router-view>
     <index-list :list="singerList" @select="selectSinger"></index-list>
   </div>

@@ -2,6 +2,7 @@ const pinyin = require('pinyin')
 const CODE_OK = 200
 const axios = require('axios')
 const baseUrl = 'http://47.103.29.206:3000'
+const cookie = 'MUSIC_U=675fb74408213020288a334790de3971b87f628b7d8fb6ae85721bab949eee9c33a649814e309366; Max-Age=1296000; Expires=Tue 9 Feb 2021 07:24:23 GMT; Path=/'
 
 // const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
@@ -13,6 +14,7 @@ function registerRouter(app) {
     registerSingerDetail(app),
     registerSongUrl(app),
     registerLyric(app)
+  registerAlbum(app)
 }
 
 // 推荐slider
@@ -248,6 +250,29 @@ function mergeSinger(singer) {
     singerMerge.push(item.name)
   })
   return singerMerge.join('/')
+}
+
+// 获取歌单专辑数据
+function registerAlbum(app) {
+  app.get('/api/getAlbum', (req, res) => {
+    // 专辑id
+    console.log(req.query)
+    const params = req.query
+    const url = `${baseUrl}/playlist/detail`
+    axios.get(url, {
+      params,
+      headers: { cookie: cookie }
+    }).then((response) => {
+      console.log("res:", response)
+      const songList = response.data.privileges
+      res.json({
+        result: {
+          songList
+        }
+      })
+    })
+
+  })
 }
 
 module.exports = registerRouter
