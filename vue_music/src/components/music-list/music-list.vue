@@ -24,7 +24,7 @@
       @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <Song-list :songs="songs" @select="selectItem"></Song-list>
+        <Song-list :songs="data" @select="selectItem"></Song-list>
       </div>
     </scroll>
   </div>
@@ -44,7 +44,7 @@ export default {
     SongList
   },
   props: {
-    songs: {
+    data: {
       type: Array,
       default() {
         return [];
@@ -139,13 +139,13 @@ export default {
       // console.log(aaa)
       // 传入此歌单所有歌曲以及歌曲索引
       this.$store.dispatch('selectPlay', {
-        list: this.songs,
+        list: this.data,
         index
       })
     },
     randomPlay() {
       console.log("随机按钮")
-      this.$store.dispatch('randomPlay', this.songs)
+      this.$store.dispatch('randomPlay', this.data)
     }
   },
   mounted() {

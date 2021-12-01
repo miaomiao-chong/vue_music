@@ -1,7 +1,8 @@
 <template>
   <div class="album-container">
+    album
     <music-list
-      :songs="songs"
+      :data="songList"
       :title="title"
       :pic="pic"
       :loading="loading"
@@ -10,9 +11,70 @@
 </template>
 
 <script>
+import musicList from "@/components/music-list/music-list";
+import { ALBUM_KRY } from "@/assets/js/constant";
+import { getAlbum } from "@/service/recommend";
+import { getSongUrl } from "@/service/song";
 
 export default {
-  name: "album.vue"
+  name: "album.vue",
+  components: {
+    musicList
+  },
+  props: {
+    album: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      result: [],
+      loading: true,
+      songList: String
+    }
+  },
+  computed: {
+    computedAlbum() {
+      let ret = null
+      const album = this.album
+
+      if (album) {
+        ret = album
+      } else {
+        console.log('sessionStorage.getItem(albumkey)', sessionStorage.getItem(ALBUM_KRY))
+        const cachedAlbum = JSON.parse(sessionStorage.getItem(ALBUM_KRY))
+        if (cachedAlbum && cachedAlbum.id === this.$route.params.id) {
+          ret = cachedAlbum
+        }
+      }
+      const newRet = {
+        id: ret.id,
+        picUrl: ret.pic,
+        name: ret.username
+      }
+      return newRet
+    },
+    pic() {
+      return this.computedAlbum.picUrl;
+    },
+    title() {
+      return this.computedAlbum.name;
+    },
+  },
+  async created() {
+    let result = await getAlbum(this.computedAlbum.id)
+    result = result.data.result;
+    console.log("----result-----", result)
+    result = await getSongUrl({ mid: result })
+    console.log("-----result------", result)
+    this.songList = result
+    this.loading = false
+  },
+  mounted(e) {
+    console.log(e);
+    console.log(this.album)
+  },
+
 }
 </script>
 

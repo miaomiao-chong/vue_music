@@ -176,26 +176,8 @@ function registerSingerDetail(app) {
     const url = `${baseUrl}/artist/top/song`
     axios.get(url, { params }).then((result) => {
       const data = result.data.songs
-      const songList = []
-      data.forEach((item) => {
-        const singer = mergeSinger(item.ar)
-        const id = item.id
-        const name = item.name
-        const url = ''
-        const pic = item.al.picUrl
-        const album = item.al.name
-        const alId = item.al.id
-        const songItem = {
-          singer,
-          id,
-          name,
-          url,
-          pic,
-          album,
-          alId
-        }
-        songList.push(songItem)
-      })
+      const songList = handleSongList(data)
+      console.log("songLIst.length", songList)
       res.json({
         result: songList
       })
@@ -208,6 +190,7 @@ function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
     // console.log(req.body);
     let mid = req.body.mid
+    console.log("mid", mid)
     process(mid)
     // console.log("result", result);
     // console.log('获取歌曲url');
@@ -264,15 +247,39 @@ function registerAlbum(app) {
       headers: { cookie: cookie }
     }).then((response) => {
       console.log("res:", response)
-      const songList = response.data.privileges
+      let songList = response.data.playlist.tracks
+      songList = handleSongList(songList)
       res.json({
-        result: {
-          songList
-        }
+        result: songList
       })
     })
-
   })
+}
+// 获取
+function handleSongList(list) {
+  const songList = []
+  console.log("list.length", list.length)
+  list.forEach((item) => {
+    const singer = mergeSinger(item.ar)
+    const id = item.id
+    const name = item.name
+    const url = ''
+    const pic = item.al.picUrl
+    const album = item.al.name
+    const alId = item.al.id
+    const songItem = {
+      singer,
+      id,
+      name,
+      url,
+      pic,
+      album,
+      alId
+    }
+    // console.log("songitem", songItem)
+    songList.push(songItem)
+  })
+  return songList
 }
 
 module.exports = registerRouter

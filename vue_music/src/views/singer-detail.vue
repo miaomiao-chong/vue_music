@@ -4,7 +4,7 @@
     <music-list
       :title="title"
       :pic="pic"
-      :songs="songs"
+      :data="data"
       :loading="loading"
     ></music-list>
   </div>
@@ -22,7 +22,7 @@ export default {
     return {
       // title: "",
       // pic: "",
-      songs: [],
+      data: [],
       result: [],
       loading: true,
     };
@@ -82,8 +82,8 @@ export default {
     let result = await getSingerDetail(this.computedSinger);
     result = result.data.result;
     console.log("---result-----", result)
-    this.songs = await getSongUrl({ mid: result, aa: "test" });
-    console.log("----+url songs------", this.songs);
+    this.data = await getSongUrl({ mid: result, aa: "test" });
+    console.log("----+url data------", this.data);
     this.loading = false;
   },
 };

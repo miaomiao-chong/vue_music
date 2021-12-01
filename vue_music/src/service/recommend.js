@@ -16,5 +16,5 @@ export function getAlbum(albumId) {
   return get('/api/getAlbum', {
     id: albumId,
     cookie: 'NMTID=00ObtYbvg32zLcqjk6Tqj2Px63cLCIAAAF8RhAK6A'
-})
+  })
 }

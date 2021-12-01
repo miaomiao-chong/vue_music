@@ -10,9 +10,9 @@
         <div class="recommend-list">
           <h1 class="list-title" v-show="!loading">热门歌单推荐</h1>
           <ul>
-            <li v-for="item in albums" class="item" :key="item.id">
+            <li v-for="item in albums" class="item" :key="item.id" @click="selectItem(item)">
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.pic" />
+                <img width="60" height="60" v-lazy="item.pic"/>
               </div>
               <div class="text">
                 <h2 class="name">
@@ -27,6 +27,11 @@
         </div>
       </div>
     </scroll>
+    <router-view v-slot="{ Component }">
+      <transition appear name="slide">
+        <component :is="Component" :album="selectedAlbum"/>
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -34,6 +39,7 @@
 import { getBanner, getPlaylist } from "@/service/recommend";
 import Slider from "@/components/base/slider/slider";
 import Scroll from "@/components/base/scroll/scroll";
+
 export default {
   name: "recommend",
   components: {
@@ -44,7 +50,8 @@ export default {
     return {
       sliders: [],
       albums: [],
-      loadingText: '正在加载中'
+      loadingText: '正在加载中',
+      selectedAlbum: []
     };
   },
   computed: {
@@ -61,6 +68,15 @@ export default {
     // this.sliders = getBanner().data.result.sliders
     // this.albums = getPlaylist().data.result.playlistArr
   },
+  methods: {
+    selectItem(item) {
+      this.selectedAlbum = item
+      console.log(1111, item)
+      this.$router.push({
+        path: `/recommend/${item.id}`
+      })
+    }
+  }
 };
 </script>
 
@@ -72,15 +88,18 @@ export default {
   bottom: 0;
   // 实现滚动
   overflow: scroll;
+
   .recommend-content {
     height: 100%;
     overflow: hidden;
+
     .slider-wrapper {
       position: relative;
       width: 100%;
       height: 0;
       padding-top: 40%;
       overflow: hidden;
+
       .slider-content {
         position: absolute;
         left: 0;
@@ -89,6 +108,7 @@ export default {
         height: 100%;
       }
     }
+
     .recommend-list {
       .list-title {
         height: 50px;
@@ -97,16 +117,19 @@ export default {
         font-size: 10px;
         color: yellow;
       }
+
       .item {
         display: flex;
         box-sizing: border-box;
         align-items: center;
         padding: 0 20px 20px 20px;
+
         .icon {
           flex: 0 0 60px;
           width: 60px;
           padding-right: 20px;
         }
+
         .text {
           display: flex;
           flex-direction: column;
@@ -116,10 +139,12 @@ export default {
           overflow: hidden;
           font-size: 10px;
         }
+
         .name {
           margin-bottom: 10px;
           color: white;
         }
+
         .title {
           color: rgba(247, 240, 240, 0.808);
         }
