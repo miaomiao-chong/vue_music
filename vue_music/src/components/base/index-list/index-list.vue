@@ -2,14 +2,17 @@
   <Scroll class="index-list" :probe-type="3" @scroll="onScroll">
     <div ref="groupRef" class="aaa">
       <div class="group-list" v-for="group in list" :key="group.name">
-        <div class="title">{{ group.title }}</div>
+        <div class="title">
+        {{ group.title }}
+        </div>
         <div
           class="listItem"
           v-for="item in group.list"
           :key="item.name"
           @click="onItemClick(item)"
         >
-          <img v-lazy="item.picUrl" alt="" srcset="" />
+
+          <img v-lazy="item.picUrl" alt="" srcset=""/>
           <div class="name">{{ item.name }}</div>
         </div>
       </div>
@@ -24,18 +27,23 @@
 
 <script>
 import Scroll from "@/components/wrap-scroll/index";
+import MusicList from "@/components/music-list/music-list";
+
 const heightArr = [];
 const TITLE_HEIGHT = 20;
 // let currentIndex = 0;
 export default {
-  components: { Scroll },
+  components: {
+    MusicList,
+    Scroll
+  },
   props: {
     list: {
       type: Array,
       default() {
         return [];
-      },
-    },
+      }
+    }
   },
   data() {
     return {
@@ -75,7 +83,7 @@ export default {
           // this.fixedTitle = this.list[currentIndex].title;
         }
       }
-    },
+    }
   },
   computed: {
     fixedTitle() {
@@ -101,7 +109,7 @@ export default {
           ? this.distance - TITLE_HEIGHT
           : 0;
       return `transform: translate3d(0,${diff}px,0)`;
-    },
+    }
   },
   methods: {
     onScroll(val) {
@@ -113,7 +121,8 @@ export default {
       this.$emit('select', item)
     },
   },
-};
+}
+;
 </script>
 
 <style lang="scss" scoped>
@@ -121,6 +130,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+
   .group-list {
     .title {
       height: 30px;
@@ -130,6 +140,7 @@ export default {
       color: rgb(90, 90, 90);
       padding-left: 7px;
     }
+
     .listItem {
       height: 80px;
       display: flex;
@@ -138,6 +149,7 @@ export default {
       .name {
         color: rgb(192, 189, 189);
       }
+
       img {
         width: 50px;
         height: 50px;
@@ -146,6 +158,7 @@ export default {
       }
     }
   }
+
   .fixed {
     position: absolute;
     top: 0;

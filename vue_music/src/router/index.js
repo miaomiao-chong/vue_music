@@ -5,7 +5,8 @@ import Search from '@/views/search'
 import TopList from '@/views/top-list'
 import Album from '@/views/album'
 import SingerDetail from '@/views/singer-detail'
-import player from '@/components/player/player'
+import Player from '@/components/player/player'
+import Test from '@/views/test'
 
 const routes = [
   {
@@ -42,9 +43,12 @@ const routes = [
   },
   {
     path: '/player',
-    component: player
+    component: Player
   },
-
+  {
+    path: '/test',
+    component: Test
+  },
 ]
 
 const router = createRouter({

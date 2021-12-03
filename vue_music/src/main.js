@@ -6,6 +6,7 @@ import lazyPlugin from 'vue3-lazy' // new
 import loadingDirective from './components/base/loading/directive'
 import noResultDirective from './components/base/no-result/directive'
 import '@/assets/scss/index.scss'
+import '@/assets/scss/mixin.scss'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 

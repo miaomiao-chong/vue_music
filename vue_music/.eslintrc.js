@@ -25,6 +25,8 @@ module.exports = {
     'eol-last':'off',
     'prefer-const':'off',
     'no-mixed-operators': 'off',
-    'dot-notation':'off'
+    'dot-notation':'off',
+    'spaced-comment':'off',
+    'import/no-duplicates':'off'
   }
 }

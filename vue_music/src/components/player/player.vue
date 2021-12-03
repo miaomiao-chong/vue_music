@@ -181,7 +181,7 @@ export default {
       return {
         animationPlayState: this.playing ? 'running' : 'paused'
       }
-    }
+    },
   },
   watch: {
     async currentSong(song) {
@@ -530,16 +530,25 @@ export default {
       }
 
       .title {
+        height: 50px;
+        line-height: 50px;
         text-align: center;
         display: block;
+        width: 70%;
+        margin: 0 auto;
         font-size: 23px;
         font-weight: bold;
-        margin: 11px auto 15px auto;
+        //margin: 11px auto 15px auto;
+        @include no-wrap();
       }
 
       .subtitle {
+        display: block;
+        width: 300px;
+        margin: 0 auto;
         text-align: center;
         font-size: 20px;
+        @include no-wrap();
       }
     }
 

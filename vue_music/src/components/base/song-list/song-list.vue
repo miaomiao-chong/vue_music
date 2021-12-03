@@ -47,10 +47,10 @@ export default {
       line-height: 20px;
       overflow: hidden;
       .title {
-        // @include no-wrap();
+         @include no-wrap();
       }
       .desc {
-        // @include no-wrap();
+         @include no-wrap();
         width: 100%;
         color: rgba(222, 223, 224, 0.959);
         margin-top: 4px;

@@ -177,7 +177,7 @@ function registerSingerDetail(app) {
     axios.get(url, { params }).then((result) => {
       const data = result.data.songs
       const songList = handleSongList(data)
-      console.log("songLIst.length", songList)
+      // console.log("songLIst.length", songList)
       res.json({
         result: songList
       })
@@ -190,7 +190,7 @@ function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
     // console.log(req.body);
     let mid = req.body.mid
-    console.log("mid", mid)
+    // console.log("mid", mid)
     process(mid)
     // console.log("result", result);
     // console.log('获取歌曲url');
@@ -239,14 +239,14 @@ function mergeSinger(singer) {
 function registerAlbum(app) {
   app.get('/api/getAlbum', (req, res) => {
     // 专辑id
-    console.log(req.query)
+    // console.log(req.query)
     const params = req.query
     const url = `${baseUrl}/playlist/detail`
     axios.get(url, {
       params,
       headers: { cookie: cookie }
     }).then((response) => {
-      console.log("res:", response)
+      // console.log("res:", response)
       let songList = response.data.playlist.tracks
       songList = handleSongList(songList)
       res.json({
@@ -258,7 +258,7 @@ function registerAlbum(app) {
 // 获取
 function handleSongList(list) {
   const songList = []
-  console.log("list.length", list.length)
+  // console.log("list.length", list.length)
   list.forEach((item) => {
     const singer = mergeSinger(item.ar)
     const id = item.id

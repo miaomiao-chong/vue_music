@@ -39,6 +39,7 @@
 import { getBanner, getPlaylist } from "@/service/recommend";
 import Slider from "@/components/base/slider/slider";
 import Scroll from "@/components/base/scroll/scroll";
+import { ALBUM_KRY } from "@/assets/js/constant";
 
 export default {
   name: "recommend",
@@ -71,10 +72,15 @@ export default {
   methods: {
     selectItem(item) {
       this.selectedAlbum = item
-      console.log(1111, item)
+      // console.log(1111, item)
+      this.cacheAlbum(item)
       this.$router.push({
         path: `/recommend/${item.id}`
       })
+    },
+    cacheAlbum(album) {
+      const setAlbumStr = JSON.stringify(album)
+      sessionStorage.setItem(ALBUM_KRY, setAlbumStr)
     }
   }
 };

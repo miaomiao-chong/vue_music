@@ -1,6 +1,5 @@
 <template>
   <div class="album-container">
-    album
     <music-list
       :data="songList"
       :title="title"
@@ -37,14 +36,19 @@ export default {
     computedAlbum() {
       let ret = null
       const album = this.album
-
-      if (album) {
+      // 这里是个proxy对象，所以不能直接对album判空？
+      console.log("album:", album.id)
+      if (album.id) {
         ret = album
       } else {
+        console.log("session")
         console.log('sessionStorage.getItem(albumkey)', sessionStorage.getItem(ALBUM_KRY))
         const cachedAlbum = JSON.parse(sessionStorage.getItem(ALBUM_KRY))
-        if (cachedAlbum && cachedAlbum.id === this.$route.params.id) {
+        console.log(cachedAlbum)
+        console.log("cachedAlbum.id ", cachedAlbum.id, "this.$route.params.id", this.$route.params.id)
+        if (cachedAlbum && cachedAlbum.id.toString() === this.$route.params.id) {
           ret = cachedAlbum
+          console.log("--------ret-----", ret)
         }
       }
       const newRet = {
@@ -63,7 +67,7 @@ export default {
   },
   async created() {
     let result = await getAlbum(this.computedAlbum.id)
-    result = result.data.result;
+    result = result.data.result.slice();
     console.log("----result-----", result)
     result = await getSongUrl({ mid: result })
     console.log("-----result------", result)

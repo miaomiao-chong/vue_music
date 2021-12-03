@@ -4,7 +4,9 @@
     <div class="back" @click="goBack">
       <i class="iconfont icon-fanhui" style="color: yellow"></i>
     </div>
-    <h1 class="title">{{ title }}</h1>
+    <h1 class="title">
+      <x-marquee :word="title" :interval="200" :step="3"></x-marquee>
+    </h1>
     <!-- 背景图片 -->
     <div class="bg-image" :style="bgImageStyle" ref="bgImage">
       <!-- 半透明 -->
@@ -34,14 +36,15 @@
 // import Scroll from "@/components/base/scroll/scroll";
 import Scroll from "@/components/wrap-scroll/index";
 import SongList from "@/components/base/song-list/song-list";
-
+import marquee from "@/components/base/marquee/marquee";
 // import Scroll from "../base/scroll/scroll.vue";
 const RESERVE_HRIGHT = 40;
 export default {
   name: "music-list",
   components: {
     Scroll,
-    SongList
+    SongList,
+    'x-marquee': marquee
   },
   props: {
     data: {
