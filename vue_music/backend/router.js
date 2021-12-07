@@ -280,60 +280,43 @@ function registerTopList(app) {
           })
         })
       })
-      // 会有某些榜单没有歌曲的情况，需要去请求获取歌单详情接口
-      // filteredList.forEach((list) => {
-      //   if (!list.songList.length) {
-      //     axios.get(LocalUrl + '/api/getAlbum', {
-      //       params: {
-      //         id: list.id
-      //       }
-      //     }).then((res) => {
-      //       console.log(LocalUrl + '/api/getAlbum' + "id=" + list.id)
-      //       // console.log("res", res.data.result)
-      //       const reslist = res.data.result
-      //       for (let i = 0; i < 3; i++) {
-      //         console.log("000", reslist[i].id)
-      //         // list.songList[i].id = reslist[i].id
-      //         // list.songList[i].singerName = reslist[i].singer
-      //         // list.songList[i].songName = reslist[i].name
-      //         list.songList[0] = {
-      //           "fdsfds": 123456
-      //         }
-      //         // list.push({
-      //         //   id: reslist[i].id,
-      //         //   singerName: reslist[i].singer,
-      //         //   songName: reslist[i].name
-      //         // })
-      //       }
-      //     })
-      //   }
-      // })
+      const promiseArr = []
       for (let i = 0; i < filteredList.length; i++) {
         let songListItem = filteredList[i].songList
         if (songListItem.length === 0) {
-          axios.get(LocalUrl + '/api/getAlbum', {
+//    axios返回值是一个Promise对象
+          const promise = axios.get('http://127.0.0.1:8081/api/getAlbum', {
             params: {
               id: filteredList[i].id
             }
           }).then((res) => {
-            // console.log(res)
             const songDetailList = res.data.result.slice(0, 3)
+            // songListItem=[...songDetailList]   // 不行，地址会发生变化
             for (let i = 0; i < songDetailList.length; i++) {
               const item = {
                 songName: songDetailList[i].name,
                 singerName: songDetailList[i].singer
               }
               songListItem.push(item)
-              // console.log("item",item)
-              // console.log("songListItem",songListItem)
             }
+            // 可以看到这里有数据
+            // console.log(filteredList[i].songList);
+            return 1
+          }).catch(err => {
+            console.log(err);
           })
+          promiseArr.push(promise)
         }
       }
-      res.json({
-        result: {
-          filteredList
-        }
+      // console.dir(promiseArr);  放Promise对象的一个数组
+      // 请求数据太多，响应有点慢
+      Promise.all(promiseArr).then((e) => {
+        console.log("ee", e);
+        res.json({
+          result: {
+            filteredList
+          }
+        })
       })
     })
   })
