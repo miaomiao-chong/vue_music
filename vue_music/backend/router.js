@@ -3,6 +3,7 @@ const CODE_OK = 200
 const axios = require('axios')
 const baseUrl = 'http://47.103.29.206:3000'
 const cookie = 'MUSIC_U=675fb74408213020288a334790de3971b87f628b7d8fb6ae85721bab949eee9c33a649814e309366; Max-Age=1296000; Expires=Tue 9 Feb 2021 07:24:23 GMT; Path=/'
+const LocalUrl = 'http://localhost:8081'
 
 // const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
@@ -15,6 +16,8 @@ function registerRouter(app) {
     registerSongUrl(app),
     registerLyric(app)
   registerAlbum(app)
+  registerTopList(app)
+  // registerTopDetail(app)
 }
 
 // 推荐slider
@@ -255,7 +258,108 @@ function registerAlbum(app) {
     })
   })
 }
-// 获取
+
+// 获取榜单数据
+function registerTopList(app) {
+  app.get('/api/getTopList', (req, res) => {
+    const url = `${baseUrl}/toplist/detail`
+    axios.get(url).then((response) => {
+      // console.log(app)
+      const list = response.data.list
+      let filteredList = []
+      list.forEach((item) => {
+        filteredList.push({
+          name: item.name,
+          id: item.id,
+          coverImgUrl: item.coverImgUrl,
+          songList: item.tracks.map((songItem) => {
+            return {
+              songName: songItem.first,
+              singerName: songItem.second
+            }
+          })
+        })
+      })
+      // 会有某些榜单没有歌曲的情况，需要去请求获取歌单详情接口
+      // filteredList.forEach((list) => {
+      //   if (!list.songList.length) {
+      //     axios.get(LocalUrl + '/api/getAlbum', {
+      //       params: {
+      //         id: list.id
+      //       }
+      //     }).then((res) => {
+      //       console.log(LocalUrl + '/api/getAlbum' + "id=" + list.id)
+      //       // console.log("res", res.data.result)
+      //       const reslist = res.data.result
+      //       for (let i = 0; i < 3; i++) {
+      //         console.log("000", reslist[i].id)
+      //         // list.songList[i].id = reslist[i].id
+      //         // list.songList[i].singerName = reslist[i].singer
+      //         // list.songList[i].songName = reslist[i].name
+      //         list.songList[0] = {
+      //           "fdsfds": 123456
+      //         }
+      //         // list.push({
+      //         //   id: reslist[i].id,
+      //         //   singerName: reslist[i].singer,
+      //         //   songName: reslist[i].name
+      //         // })
+      //       }
+      //     })
+      //   }
+      // })
+      for (let i = 0; i < filteredList.length; i++) {
+        let songListItem = filteredList[i].songList
+        if (songListItem.length === 0) {
+          axios.get(LocalUrl + '/api/getAlbum', {
+            params: {
+              id: filteredList[i].id
+            }
+          }).then((res) => {
+            // console.log(res)
+            const songDetailList = res.data.result.slice(0, 3)
+            for (let i = 0; i < songDetailList.length; i++) {
+              const item = {
+                songName: songDetailList[i].name,
+                singerName: songDetailList[i].singer
+              }
+              songListItem.push(item)
+              // console.log("item",item)
+              // console.log("songListItem",songListItem)
+            }
+          })
+        }
+      }
+      res.json({
+        result: {
+          filteredList
+        }
+      })
+    })
+  })
+}
+
+// 获取歌单详情
+// function registerTopDetail(app) {
+//   app.get("/api/getTopDetail", (req, res) => {
+//     const url = baseUrl + '/playlist/detail'
+//     axios.get(url, {
+//       params: {
+//         id: req.query.id
+//       }
+//     }).then((e) => {
+//       console.log("res", e.data)
+//       res.json({
+//         result: {
+//           playlist: e.data.playlist.privileges
+//         }
+//
+//       })
+//     })
+//   })
+// }
+
+// 对songList进行处理
 function handleSongList(list) {
   const songList = []
   // console.log("list.length", list.length)

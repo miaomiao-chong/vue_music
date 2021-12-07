@@ -223,7 +223,7 @@ export default {
         this.playLyric()
       } else {
         console.log("没有歌词")
-        this.pureMusicLyric = '此歌曲为没有填词的纯音乐 请欣赏'
+        this.pureMusicLyric = '此歌曲无歌词'
       }
       if (this.songReady === false) {
         this.stopLyric()
