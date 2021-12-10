@@ -17,6 +17,7 @@ function registerRouter(app) {
     registerLyric(app)
   registerAlbum(app)
   registerTopList(app)
+  registerTopDetail(app)
   // registerTopDetail(app)
 }
 
@@ -272,6 +273,7 @@ function registerTopList(app) {
           name: item.name,
           id: item.id,
           coverImgUrl: item.coverImgUrl,
+          playCount: item.playCount,
           songList: item.tracks.map((songItem) => {
             return {
               songName: songItem.first,
@@ -280,67 +282,35 @@ function registerTopList(app) {
           })
         })
       })
-      const promiseArr = []
-      for (let i = 0; i < filteredList.length; i++) {
-        let songListItem = filteredList[i].songList
-        if (songListItem.length === 0) {
-//    axios返回值是一个Promise对象
-          const promise = axios.get('http://127.0.0.1:8081/api/getAlbum', {
-            params: {
-              id: filteredList[i].id
-            }
-          }).then((res) => {
-            const songDetailList = res.data.result.slice(0, 3)
-            // songListItem=[...songDetailList]   // 不行，地址会发生变化
-            for (let i = 0; i < songDetailList.length; i++) {
-              const item = {
-                songName: songDetailList[i].name,
-                singerName: songDetailList[i].singer
-              }
-              songListItem.push(item)
-            }
-            // 可以看到这里有数据
-            // console.log(filteredList[i].songList);
-            return 1
-          }).catch(err => {
-            console.log(err);
-          })
-          promiseArr.push(promise)
+      res.json({
+        result: {
+          filteredList
         }
-      }
-      // console.dir(promiseArr);  放Promise对象的一个数组
-      // 请求数据太多，响应有点慢
-      Promise.all(promiseArr).then((e) => {
-        console.log("ee", e);
-        res.json({
-          result: {
-            filteredList
-          }
-        })
       })
     })
   })
 }
 
-// 获取歌单详情
-// function registerTopDetail(app) {
-//   app.get("/api/getTopDetail", (req, res) => {
-//     const url = baseUrl + '/playlist/detail'
-//     axios.get(url, {
-//       params: {
-//         id: req.query.id
-//       }
-//     }).then((e) => {
-//       console.log("res", e.data)
-//       res.json({
-//         result: {
-//           playlist: e.data.playlist.privileges
-//         }
-//
-//       })
-//     })
-//   })
-// }
+// 获取榜单详情数据  复制粘贴的获取歌单专辑数据
+function registerTopDetail(app) {
+  app.get('/api/getTopDetail', (req, res) => {
+    // 专辑id
+    // console.log(req.query)
+    const params = req.query
+    const url = `${baseUrl}/playlist/detail`
+    axios.get(url, {
+      params,
+      headers: { cookie: cookie }
+    }).then((response) => {
+      // console.log("res:", response)
+      let songList = response.data.playlist.tracks
+      songList = handleSongList(songList)
+      res.json({
+        result: songList
+      })
+    })
+  })
+}
 
 // 对songList进行处理
 function handleSongList(list) {

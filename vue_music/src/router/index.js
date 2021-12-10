@@ -7,6 +7,7 @@ import Album from '@/views/album'
 import SingerDetail from '@/views/singer-detail'
 import Player from '@/components/player/player'
 import Test from '@/views/test'
+import topDetail from '@/views/top-detail'
 
 const routes = [
   {
@@ -39,7 +40,11 @@ const routes = [
   },
   {
     path: '/top-list',
-    component: TopList
+    component: TopList,
+    children: [{
+      path: ':id',
+      component: topDetail
+    }]
   },
   {
     path: '/player',

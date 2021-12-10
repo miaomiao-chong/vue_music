@@ -26,7 +26,7 @@
       @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <Song-list :songs="data" @select="selectItem"></Song-list>
+        <Song-list :songs="data" :rank="rank" @select="selectItem"></Song-list>
       </div>
     </scroll>
   </div>
@@ -56,6 +56,7 @@ export default {
     title: String,
     pic: String,
     loading: Boolean,
+    rank: Boolean
   },
   data() {
     return {

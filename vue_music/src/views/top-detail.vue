@@ -1,29 +1,30 @@
 <template>
-  <div class="album-container">
+  <div class="toplist-container">
     <music-list
       :data="songList"
       :title="title"
       :pic="pic"
       :loading="loading"
+      :rank="true"
     ></music-list>
   </div>
 </template>
 
 <script>
 import musicList from "@/components/music-list/music-list";
-import { ALBUM_KRY } from "@/assets/js/constant";
-import { getAlbum } from "@/service/recommend";
+import { TOP_LIST_KEY } from "@/assets/js/constant";
 import { getSongUrl } from "@/service/song";
+import { getTopDetail } from "@/service/top-list";
 
 export default {
-  name: "album.vue",
+  name: "top-detail",
+  props: {
+    topList: {
+      type: Object,
+    }
+  },
   components: {
     musicList
-  },
-  props: {
-    album: {
-      type: Object
-    }
   },
   data() {
     return {
@@ -33,57 +34,53 @@ export default {
     }
   },
   computed: {
-    computedAlbum() {
+    computedTopDetail() {
       let ret = null
-      const album = this.album
+      const topList = this.topList
       // 这里是个proxy对象，所以不能直接对album判空？
-      console.log("album:", album.id)
-      if (album.id) {
-        ret = album
+      console.log("album:", topList)
+      if (topList.id) {
+        ret = topList
       } else {
         console.log("session")
-        console.log('sessionStorage.getItem(albumkey)', sessionStorage.getItem(ALBUM_KRY))
-        const cachedAlbum = JSON.parse(sessionStorage.getItem(ALBUM_KRY))
-        console.log(cachedAlbum)
-        console.log("cachedAlbum.id ", cachedAlbum.id, "this.$route.params.id", this.$route.params.id)
-        if (cachedAlbum && cachedAlbum.id.toString() === this.$route.params.id) {
-          ret = cachedAlbum
+        console.log('sessionStorage.getItem(albumkey)', sessionStorage.getItem(TOP_LIST_KEY))
+        const cachedTopList = JSON.parse(sessionStorage.getItem(TOP_LIST_KEY))
+        console.log(cachedTopList)
+        console.log("cachedAlbum.id ", cachedTopList.id, "this.$route.params.id", this.$route.params.id)
+        if (cachedTopList && cachedTopList.id.toString() === this.$route.params.id) {
+          ret = cachedTopList
           console.log("--------ret-----", ret)
         }
       }
+      console.log("ret.....", ret)
       const newRet = {
         id: ret.id,
-        picUrl: ret.pic,
-        name: ret.username
+        picUrl: ret.coverImgUrl,
+        name: ret.name
       }
       return newRet
     },
     pic() {
-      return this.computedAlbum.picUrl;
+      return this.computedTopDetail.picUrl;
     },
     title() {
-      return this.computedAlbum.name;
+      return this.computedTopDetail.name;
     },
   },
   async created() {
-    let result = await getAlbum(this.computedAlbum.id)
+    let result = await getTopDetail(this.computedTopDetail.id)
     result = result.data.result.slice();
     console.log("----result-----", result)
     result = await getSongUrl({ mid: result })
     console.log("-----result------", result)
     this.songList = result
     this.loading = false
-  },
-  mounted(e) {
-    console.log(e);
-    console.log(this.album)
-  },
-
+  }
 }
 </script>
 
 <style scoped>
-.album-container {
+.toplist-container {
   position: fixed;
   top: 0;
   bottom: 0;
