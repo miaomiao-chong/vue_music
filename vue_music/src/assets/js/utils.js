@@ -29,3 +29,20 @@ export function formatTime(interval) {
   }
   return `${minute}:${second}`
 }
+
+export function debounce(fn, delay = 500) {
+  let timer = null
+  // console.log(123)
+  return function () {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      // fn函数在执行的时候，会把当前的this,arguments传进来
+      // 返回的fn可能会有一些参数，还要把this传进来，如果用this的话那就不能
+      // 用箭头函数了 只能用function形式了
+      fn.apply(this, arguments)
+      timer = null
+    }, delay)
+  }
+}

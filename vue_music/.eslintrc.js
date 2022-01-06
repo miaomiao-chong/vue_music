@@ -27,6 +27,7 @@ module.exports = {
     'no-mixed-operators': 'off',
     'dot-notation':'off',
     'spaced-comment':'off',
-    'import/no-duplicates':'off'
+    'import/no-duplicates':'off',
+    'padded-blocks': 'off'
   }
 }

@@ -18,7 +18,9 @@ function registerRouter(app) {
   registerAlbum(app)
   registerTopList(app)
   registerTopDetail(app)
+  registerHotKeys(app)
   // registerTopDetail(app)
+  registerSearchKey(app)
 }
 
 // 推荐slider
@@ -287,6 +289,60 @@ function registerTopList(app) {
           filteredList
         }
       })
+    })
+  })
+}
+
+function registerHotKeys(app) {
+  const url = baseUrl + '/search/hot'
+  app.get('/api/getHotKeys', (req, res) => {
+    // console.log("fdsfdsfdsfds")
+    axios.get(url).then((response) => {
+      // console.log(response.data)
+      res.json({
+        result: {
+          hotKeys: response.data.result.hots
+        }
+      })
+    })
+  })
+}
+
+// 搜索
+function registerSearchKey(app) {
+  app.get('/api/getKeywordRes', (req, res) => {
+    const params = req.query
+    axios.get('http://47.103.29.206:3000/search', { params },).then((response) => {
+      const data = response.data.result
+      if (data.songCount === 0) {
+        res.json({
+          code: 200,
+          songs: [],
+          hasMore: false,
+          songCount: 0,
+        })
+      } else {
+        const songs = response.data.result.songs
+        // 三元运算符 到最后是没有歌曲的 map会报错
+        const handleSongs = songs ? songs.map((item) => {
+          // console.log(item.artists);
+          return {
+            id: item.id,
+            songName: item.name,
+            // singer:item.artists  一个对象，里面有一个及以上数组，每一个数组是一个歌手
+            singer: item.artists.map((list) => {
+              return list.name
+            }).join('/')//数组合并
+          }
+        }) : []
+        // console.log(data)
+        res.json({
+          code: 200,
+          songs: handleSongs,
+          hasMore: data.hasMore,
+          songCount: data.songCount,
+        })
+      }
     })
   })
 }

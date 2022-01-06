@@ -1,12 +1,20 @@
 <template>
   <div class="search-input">
     <i class="iconfont icon-sousou"></i>
-    <input type="text" class="input-inner" :placeholder="placeholder" v-model="query">
-    <i class="iconfont icon-cha"></i>
+    <input
+      type="text"
+      class="input-inner"
+      :placeholder="placeholder"
+      v-model="query"
+    />
+    <i class="iconfont icon-cha" v-show="query" @click="clear"></i>
   </div>
 </template>
 
 <script>
+import { debounce } from "@/assets/js/utils";
+// import { debounce } from 'throttle-debounce'
+
 export default {
   name: "search-input",
   props: {
@@ -14,20 +22,36 @@ export default {
     modelValue: String,
     placeholder: {
       type: String,
-      default: '请输入要查询的内容'
+      default: "请输入要查询的内容",
     },
   },
   data() {
     return {
-      query: this.modelValue
-    }
+      query: this.modelValue,
+    };
+  },
+  created() {
+    // console.log(this)
+    // this.$watch('query', debounce(function (e) {
+    //   console.log(e)
+    // }, 200))
   },
   watch: {
-    query(newQuery) {
-      this.$emit('update:modelValue', newQuery.trim())
-    }
-  }
-}
+    query: debounce(function (params) {
+      // console.log(params);
+      this.$emit("update:modelValue", params);
+    }, 500),
+    modelValue(newVal) {
+      this.query = newVal;
+    },
+  },
+
+  methods: {
+    clear() {
+      this.query = "";
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
