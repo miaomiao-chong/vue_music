@@ -18,8 +18,7 @@
         </ul>
       </div>
     </scroll>
-    <div class="search-result" v-show="query"><suggest :query="query"></suggest></div>
-
+    <div class="search-result" v-show="query"><suggest :query="query" v-on:selectSong="selectSong"></suggest></div>
   </div>
 </template>
 
@@ -63,6 +62,10 @@ export default {
       // console.log(item);
       this.query = item.first
     },
+    selectSong(item) {
+      console.log("外部拿到", item)
+
+    }
   },
 };
 </script>
@@ -75,6 +78,8 @@ export default {
   bottom: 0;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: scroll;
   .search-input-wrapper {
     margin: 0 20px;
   }
@@ -112,6 +117,7 @@ export default {
   }
   .search-result{
       flex: 1;
+    overflow: scroll;
   }
 }
 </style>

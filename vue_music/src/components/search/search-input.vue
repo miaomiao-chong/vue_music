@@ -64,12 +64,10 @@ export default {
   height: 32px;
   background: #6f6f6c;
   border-radius: 6px;
-
   .icon-sousou {
     font-size: 24px;
     color: #bbbbb8;
   }
-
   .input-inner {
     flex: 1;
     background-color: #6f6f6c;
