@@ -21,6 +21,7 @@ function registerRouter(app) {
   registerHotKeys(app)
   // registerTopDetail(app)
   registerSearchKey(app)
+  registerOneSong(app)
 }
 
 // 推荐slider
@@ -346,7 +347,37 @@ function registerSearchKey(app) {
     })
   })
 }
+// 搜索一首歌曲
+function registerOneSong(app) {
+  app.get('/api/oneSong', (req, res) => {
+    console.log(req.query)
+    const mid = req.query.mid
+    const params = {ids: mid}
+    // console.log("id", id)
+    console.log(mid)
+    const url = `${baseUrl}/song/detail`
+    axios.get(url, { params }).then((response) => {
+      // console.log("songs", response.data)
+      let songs = response.data.songs
+      songs = handleSongList(songs)
+      console.log(songs)
+      process(songs)
+      // console.log(songs2)
+      res.json({
+        result: songs
+      })
+    }).catch((err) => {
+      console.log("err", err)
+    })
 
+  })
+  function process(info) {
+    // console.log("processId :", info[0])
+    for (let i = 0; i < info.length; i++) {
+      info[i].url = `https://music.163.com/song/media/outer/url?id=${info[i].id}.mp3`
+    }
+  }
+}
 // 获取榜单详情数据  复制粘贴的获取歌单专辑数据
 function registerTopDetail(app) {
   app.get('/api/getTopDetail', (req, res) => {

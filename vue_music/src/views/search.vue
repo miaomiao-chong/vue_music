@@ -18,15 +18,18 @@
         </ul>
       </div>
     </scroll>
-    <div class="search-result" v-show="query"><suggest :query="query" v-on:selectSong="selectSong"></suggest></div>
+    <div class="search-result" v-show="query">
+      <suggest :query="query" v-on:selectSong="selectSong"></suggest>
+    </div>
   </div>
 </template>
 
 <script>
 import searchInput from "@/components/search/search-input";
-import { getHotKeys, getSearchList } from "@/service/search";
+import { getHotKeys, getOneSongDetail, getSearchList } from "@/service/search";
 import Scroll from "@/components/base/scroll/scroll";
 import Suggest from "@/components/search/suggest";
+import { getSingerDetail } from "@/service/singer";
 
 export default {
   name: "",
@@ -62,9 +65,16 @@ export default {
       // console.log(item);
       this.query = item.first
     },
-    selectSong(item) {
+    async selectSong(item) {
       console.log("外部拿到", item)
 
+      const song = await getOneSongDetail(item.id)
+      // console.log(a)
+      if (song.data.result.length === 0) {
+        console.log("没有数据")
+        return
+      }
+      this.$store.dispatch('addSong', song.data.result[0])
     }
   },
 };
@@ -80,6 +90,7 @@ export default {
   flex-direction: column;
   height: 100%;
   overflow: scroll;
+
   .search-input-wrapper {
     margin: 0 20px;
   }
@@ -115,8 +126,9 @@ export default {
       }
     }
   }
-  .search-result{
-      flex: 1;
+
+  .search-result {
+    flex: 1;
     overflow: scroll;
   }
 }

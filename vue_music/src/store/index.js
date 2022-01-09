@@ -136,6 +136,42 @@ export default createStore({
       }
     },
 
+    addSong({ commit, state }, song) {
+      console.log(song)
+      const playlist = state.playlist.slice()
+      const sequenceList = state.sequenceList.slice()
+      let currentIndex = state.currentIndex
+      // 是否已经存在在列表里 如果已经有了就直接修改currentIndex就好
+      const hasSong = playlist.findIndex((item) => {
+        return item.id === song.id
+      })
+      console.log(hasSong)
+      // 没有找到
+      if (hasSong === -1) {
+        console.log("没有找到")
+        playlist.push(song)
+        // 最后一首歌，即本次添加的一首歌，让他立即播放
+        currentIndex = playlist.length - 1
+      } else {
+        //  已经存在列表中
+        console.log("已经存在列表中")
+        currentIndex = hasSong
+      }
+      //  原始播放列表也需要添加歌曲
+      const hasSong2 = sequenceList.findIndex((item) => {
+        return item.id === song.id
+      })
+      if (hasSong2 === -1) {
+        sequenceList.push(song)
+      }
+
+      // 提交mutation
+      commit('setSequenceList', sequenceList)
+      commit('setPlaylist', playlist)
+      commit('setPlayingState', true)
+      commit('setCurrentIndex', currentIndex)
+      commit('setFullScreen', true)
+    }
   },
   modules: {}
 })
