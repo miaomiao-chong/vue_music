@@ -132,6 +132,9 @@ export default createStore({
       commit('setPlaylist', playlist)
       commit('setCurrentIndex', currentIndex)
       console.log("this", this)
+      if (!playlist.length) {
+        commit('setPlayingState', false)
+      }
 
       function getIndex(list, song) {
         return list.findIndex((item) => {
@@ -139,7 +142,13 @@ export default createStore({
         })
       }
     },
-
+    // 清空菜单按钮里的播放列表
+    clearSongList({ commit }) {
+      commit('setSequenceList', [])
+      commit('setPlaylist', [])
+      commit('setCurrentIndex', 0)
+      commit('setPlayingState', false)
+    },
     addSong({ commit, state }, song) {
       console.log(song)
       const playlist = state.playlist.slice()

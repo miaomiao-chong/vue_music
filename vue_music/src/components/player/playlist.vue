@@ -30,7 +30,13 @@
               </li>
             </transition-group>
           </scroll>
+          <div class="operate">
+            <div class="add" @click="showAddSong">点此添加</div>
+            <div class="clearAll" @click="clearAll">点此清空</div>
+          </div>
         </div>
+        <confirm text="确认清空吗" @confirm="confirm" ref="confirm"></confirm>
+        <add-song ref="addSongRef"></add-song>
       </div>
     </transition>
   </teleport>
@@ -39,10 +45,16 @@
 <script>
 import Scroll from "@/components/base/scroll/scroll";
 import { FAVORITE_KEY, PLAY_MODE } from "@/assets/js/constant";
+import Confirm from "@/components/base/confirm/confirm";
+import AddSong from "@/components/add-song/add-song";
 
 export default {
   name: "playlist",
-  components: { Scroll },
+  components: {
+    AddSong,
+    Confirm,
+    Scroll
+  },
   data() {
     return {
       visible: false,
@@ -164,6 +176,20 @@ export default {
       setTimeout(() => {
         this.removing = false
       }, 300)
+    },
+    clearAll() {
+      console.log(this.$refs.confirm)
+      this.$refs.confirm.visible = true
+    },
+    confirm() {
+      this.$store.dispatch('clearSongList')
+      this.$refs.confirm.visible = false
+      this.visible = false
+    },
+    showAddSong() {
+      // console.log("fds")
+      console.log(this.$refs.addSongRef)
+      this.$refs.addSongRef.visible = true
     }
   }
 }
@@ -268,12 +294,27 @@ export default {
           color: #6f6f6c;
         }
       }
+
       .list-enter-active, .list-leave-active {
         transition: all .3s;
       }
 
       .list-enter-from, .list-leave-to {
         height: 0 !important;
+      }
+    }
+
+    .operate {
+      height: 40px;
+      display: flex;
+      justify-content: space-evenly;
+
+      .add {
+        line-height: 40px;
+      }
+
+      .clearAll {
+        line-height: 40px;
       }
     }
   }

@@ -2,7 +2,7 @@
   <div class="search-list">
     <transition-group name="list" tag="ul">
       <li v-for="item in list" :key="item.id" class="list">
-        <span class="song">{{item.songName}}--{{item.singer}}</span>
+        <span class="searchItem" @click="$emit('clickSearchHistory', item)">{{item}}</span>
         <span class="delete" @click="deleteSearchHistory(item)">X</span>
       </li>
     </transition-group>
@@ -38,13 +38,14 @@ export default {
     line-height: 30px;
     line-height: 30px;
     color: #6f6f6c;
-    .song{
+    .searchItem{
       flex: 1;
       display: inline-block;
       margin-right: 8px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
     }
     .delete{
       width: 40px;

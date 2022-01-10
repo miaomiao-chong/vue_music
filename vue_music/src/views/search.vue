@@ -27,7 +27,8 @@
           </div>
           <confirm ref="confirmRef" text="确认全部删除吗" @confirm="confirm" @cancel="cancel">
           </confirm>
-          <search-list :list="searchList" @deleteSearchHistory="deleteSearchHistory"></search-list>
+          <search-list :list="searchList" @deleteSearchHistory="deleteSearchHistory"
+                       @clickSearchHistory="clickSearchHistory"></search-list>
         </div>
       </div>
     </scroll>
@@ -96,11 +97,9 @@ export default {
     chooseHot(item) {
       // console.log(item);
       this.query = item.first
-
     },
     async selectSong(item) {
       console.log("外部拿到", item)
-
       const song = await getOneSongDetail(item.id)
       // console.log(a)
       if (song.data.result.length === 0) {
@@ -109,12 +108,12 @@ export default {
       }
       this.$store.dispatch('addSong', song.data.result[0])
 
-      // 处理缓存
+      // 处理缓存  ---  搜索历史
       const searchHis = JSON.parse(localStorage.getItem(SEARCH_KEY)) || []
       // 是否已经添加
-      const index = searchHis.findIndex((listItem) => {
-        console.log(listItem.id, item.id)
-        return listItem.id === item.id
+      const index = searchHis.findIndex((item) => {
+        console.log(item, this.query)
+        return item === this.query
       })
       // 删除前面已经有的item, 把新的添加到最前面
       if (index === 0) {
@@ -124,10 +123,34 @@ export default {
         console.log("已经有了")
         searchHis.splice(index, 1)
       }
-      searchHis.unshift(item)
+      // console.log("item", item)
+      searchHis.unshift(this.query)
       localStorage.setItem(SEARCH_KEY, JSON.stringify(searchHis))
       this.$store.commit("setSearchHistory", searchHis)
 
+      // 处理缓存
+      // const searchHis = JSON.parse(localStorage.getItem(SEARCH_KEY)) || []
+      // // 是否已经添加
+      // const index = searchHis.findIndex((listItem) => {
+      //   console.log(listItem.id, item.id)
+      //   return listItem.id === item.id
+      // })
+      // // 删除前面已经有的item, 把新的添加到最前面
+      // if (index === 0) {
+      //   return
+      // }
+      // if (index !== -1) {
+      //   console.log("已经有了")
+      //   searchHis.splice(index, 1)
+      // }
+      // searchHis.unshift(item)
+      // localStorage.setItem(SEARCH_KEY, JSON.stringify(searchHis))
+      // this.$store.commit("setSearchHistory", searchHis)
+
+    },
+    // 点击历史记录
+    clickSearchHistory(val) {
+      this.query = val
     },
     // 删除历史
     deleteSearchHistory(item) {
@@ -174,6 +197,7 @@ export default {
     //top: 130px;
     //bottom: 0;
     overflow: hidden;
+
     div {
       .hotKeys {
         margin: 0 20px 20px 20px;

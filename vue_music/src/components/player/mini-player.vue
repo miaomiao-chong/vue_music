@@ -41,7 +41,6 @@ import playlist from "@/components/player/playlist";
 let slider
 BScroll.use(Slide)
 export default {
-
   name: "mini-player",
   props: {
     progress: {
@@ -117,6 +116,14 @@ export default {
       // console.log("fdasfdasfd")
       if (slider && this.sliderShow) {
         slider.goToPage(currentIndex, 0, 0)
+      }
+    },
+    async playlist() {
+      if (slider && this.sliderShow && this.playlist.length) {
+        await this.$nextTick()
+        console.log("slider", slider)
+        // slider.refresh()
+
       }
     }
   },
