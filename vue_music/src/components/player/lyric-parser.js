@@ -86,8 +86,10 @@ export default class Lyric {
   _playRest() {
     let line = this.lines[this.curNum]
     let delay = line.time - (+new Date() - this.startStamp)
+    console.log("clear", this.timer)
     clearTimeout(this.timer)
     this.timer = setTimeout(() => {
+      console.log("addTimer", this.timer)
       this._callHandler(this.curNum++)
       if (this.curNum < this.lines.length && this.state === STATE_PLAYING) {
         this._playRest()
@@ -109,6 +111,7 @@ export default class Lyric {
     }
 
     if (this.curNum < this.lines.length) {
+      console.log("clear", this.timer)
       clearTimeout(this.timer)
       this._playRest()
     }
@@ -129,10 +132,12 @@ export default class Lyric {
   stop() {
     console.log("stop")
     this.state = STATE_PAUSE
+    console.log("clear", this.timer)
     clearTimeout(this.timer)
   }
 
   seek(offset) {
+    console.log("clear", this.timer)
     clearTimeout(this.timer)
     console.log("seek")
     this.play(offset)
