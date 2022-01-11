@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { FAVORITE_KEY, PLAY_MODE, SEARCH_KEY } from "@/assets/js/constant";
+import { FAVORITE_KEY, PLAY_KEY, PLAY_MODE, SEARCH_KEY } from "@/assets/js/constant";
 import { shuffle } from "@/assets/js/utils";
 
 export default createStore({
@@ -19,7 +19,8 @@ export default createStore({
     // 全屏的还是收缩的
     fullScreen: false,
     likeList: JSON.parse(localStorage.getItem(FAVORITE_KEY)) || [],
-    searchHistory: JSON.parse(localStorage.getItem(SEARCH_KEY)) || []
+    searchHistory: JSON.parse(localStorage.getItem(SEARCH_KEY)) || [],
+    playHistory: JSON.parse(localStorage.getItem(PLAY_KEY)) || []
   },
   getters: {
     currentSong(state) {
@@ -59,6 +60,9 @@ export default createStore({
     },
     setSearchHistory(state, list) {
       state.searchHistory = list
+    },
+    setPlayHistory(state, songs) {
+      state.playHistory = songs
     }
   },
   // actions:对多个mutations的封装
@@ -177,7 +181,6 @@ export default createStore({
       if (hasSong2 === -1) {
         sequenceList.push(song)
       }
-
       // 提交mutation
       commit('setSequenceList', sequenceList)
       commit('setPlaylist', playlist)

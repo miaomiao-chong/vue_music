@@ -85,7 +85,7 @@
 </template>
 
 <script type="module">
-import { FAVORITE_KEY, PLAY_MODE } from '@/assets/js/constant'
+import { FAVORITE_KEY, PLAY_KEY, PLAY_MODE } from '@/assets/js/constant'
 import progressBar from './progress-bar'
 import scroll from '@/components/base/scroll/scroll'
 import { getLyric } from "@/service/song";
@@ -326,6 +326,27 @@ export default {
       // 歌曲播放总时长
       this.duration = e.target.duration
       this.playLyric()
+      // 处理缓存
+
+      // 待优化  封装
+      const currentSong = this.currentSong
+      const searchHis = JSON.parse(localStorage.getItem(PLAY_KEY)) || []
+      // 是否已经添加
+      const index = searchHis.findIndex((listItem) => {
+        console.log(listItem.id, currentSong.id)
+        return listItem.id === currentSong.id
+      })
+      // 删除前面已经有的item, 把新的添加到最前面
+      if (index === 0) {
+        return
+      }
+      if (index !== -1) {
+        console.log("已经有了")
+        searchHis.splice(index, 1)
+      }
+      searchHis.unshift(currentSong)
+      localStorage.setItem(PLAY_KEY, JSON.stringify(searchHis))
+      this.$store.commit("setPlayHistory", searchHis)
     },
     // 播放出问题 防止出问题不能切换的情况
     error() {

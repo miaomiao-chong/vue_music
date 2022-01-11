@@ -3,7 +3,7 @@
     <transition-group name="list" tag="ul">
       <li v-for="item in list" :key="item.id" class="list">
         <span class="searchItem" @click="$emit('clickSearchHistory', item)">{{item}}</span>
-        <span class="delete" @click="deleteSearchHistory(item)">X</span>
+        <span class="delete" v-if="showDelete" @click="deleteSearchHistory(item)">X</span>
       </li>
     </transition-group>
   </div>
@@ -18,6 +18,10 @@ export default {
       default() {
         return []
       }
+    },
+    showDelete: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -37,7 +41,7 @@ export default {
     height: 30px;
     line-height: 30px;
     line-height: 30px;
-    color: #6f6f6c;
+    color: #cecec3;
     .searchItem{
       flex: 1;
       display: inline-block;
