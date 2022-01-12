@@ -44,7 +44,7 @@ export default {
   top: 0;
   width: 100%;
   z-index: 400;
-  background: $color-dialog-background;
+  background-color: #635b51;
 
   &.slide-down-enter-active, &.slide-down-leave-active {
     transition: all 0.3s

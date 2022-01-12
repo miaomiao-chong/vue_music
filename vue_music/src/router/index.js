@@ -8,6 +8,7 @@ import SingerDetail from '@/views/singer-detail'
 import Player from '@/components/player/player'
 import Test from '@/views/test'
 import topDetail from '@/views/top-detail'
+import UserCenter from '@/views/user-center'
 
 const routes = [
   {
@@ -53,6 +54,13 @@ const routes = [
   {
     path: '/test',
     component: Test
+  },
+  {
+    path: '/user',
+    // component: UserCenter
+    components: {
+      user: UserCenter
+    }
   },
 ]
 

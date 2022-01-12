@@ -514,7 +514,7 @@ export default {
     width: 100%;
     height: 100%;
     background: rgba(194, 178, 178, 0.99);
-
+    z-index: 100;
     .background {
       position: absolute;
       left: 0;

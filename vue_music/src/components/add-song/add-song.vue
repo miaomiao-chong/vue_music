@@ -47,6 +47,12 @@
         <div class="search-result" v-show="query">
           <suggest :query="query" @selectSong="selectSong"></suggest>
         </div>
+        <message ref="messageRef">
+          <div class="message-title">
+            <span >√</span>
+            <span class="text">添加成功</span>
+          </div>
+        </message>
       </div>
     </transition>
   </teleport>
@@ -61,10 +67,12 @@ import SongList from "@/components/base/song-list/song-list";
 import Scroll from "@/components/base/scroll/scroll";
 import { getOneSongDetail } from "@/service/search";
 import { SEARCH_KEY } from "@/assets/js/constant";
+import Message from "@/components/base/message/message";
 
 export default {
   name: "add-song",
   components: {
+    Message,
     Scroll,
     SongList,
     SearchList,
@@ -109,6 +117,8 @@ export default {
     selectSongBySongList({ songItem }) {
       console.log(songItem)
       this.$store.dispatch("addSong", songItem)
+      this.$refs.messageRef.show()
+
     },
     //  suggest组件点击
     async selectSong(item) {
@@ -120,7 +130,7 @@ export default {
         return
       }
       this.$store.dispatch('addSong', song.data.result[0])
-
+      this.$refs.messageRef.show()
       // 处理缓存  ---  搜索历史
       const searchHis = JSON.parse(localStorage.getItem(SEARCH_KEY)) || []
       // 是否已经添加
@@ -192,6 +202,15 @@ export default {
         padding: 20px 30px;
       }
     }
+  }
+}
+.message-title {
+  text-align: center;
+  padding: 18px 0;
+  font-size: 16px;
+  color: #5d7b5f;
+  span{
+    font-weight: bold;
   }
 }
 </style>

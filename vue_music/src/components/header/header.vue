@@ -2,6 +2,9 @@
   <div class="header">
     <span class="icon"></span>
     <h1 class="text">Chicken Music</h1>
+    <router-link to="./user" class="mine">
+      <i class="iconfont icon-wode"></i>
+    </router-link>
   </div>
 </template>
 
@@ -40,10 +43,11 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    .icon-mine {
+    .icon-wode {
       display: block;
       padding: 12px;
       font-size: 20px;
+      color: #954e4e;
     }
   }
 }
