@@ -16,7 +16,7 @@ import { getAlbum } from "@/service/recommend";
 import { getSongUrl } from "@/service/song";
 
 export default {
-  name: "album.vue",
+  name: "album",
   components: {
     musicList
   },

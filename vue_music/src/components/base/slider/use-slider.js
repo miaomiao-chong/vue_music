@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
 import Slide from '@better-scroll/slide'
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, ref, onUnmounted, onActivated, onDeactivated } from 'vue'
 
 // 注册插件
 BScroll.use(Slide)
@@ -29,6 +29,15 @@ export default function useSlider(wrapperRef) {
 
   onUnmounted(() => {
     slider.value.destroy()
+  })
+  // keep-alive增加代码
+  onActivated(() => {
+    slider.value.enable()
+    slider.value.refresh()
+  })
+  onDeactivated(() => {
+    // 禁用
+    slider.value.disable()
   })
   return {
     slider,

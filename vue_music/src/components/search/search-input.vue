@@ -31,6 +31,7 @@ export default {
     };
   },
   created() {
+
     // console.log(this)
     // this.$watch('query', debounce(function (e) {
     //   console.log(e)

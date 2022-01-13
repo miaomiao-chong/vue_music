@@ -52,6 +52,7 @@ export default {
     Progress: progress,
     Playlist: playlist
   },
+
   computed: {
     playing() {
       return this.$store.state.playing || []
@@ -123,7 +124,6 @@ export default {
         await this.$nextTick()
         console.log("slider", slider)
         // slider.refresh()
-
       }
     }
   },
@@ -134,6 +134,14 @@ export default {
     showPlaylist() {
       this.$refs.playlistRef.show()
     }
+  },
+  //
+  activated() {
+    slider.enable()
+    slider.refresh()
+  },
+  deactivated() {
+    slider.disable()
   },
 
 }

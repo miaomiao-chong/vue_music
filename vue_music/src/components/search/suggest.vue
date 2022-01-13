@@ -127,7 +127,15 @@ export default {
   },
   unmounted() {
     this.scroll.destroy()
-  }
+  },
+  // keep-alive
+  activated() {
+    this.scroll.enable()
+    this.scroll.refresh()
+  },
+  deactivated() {
+    this.scroll.disable()
+  },
 }
 </script>
 
