@@ -72,7 +72,7 @@ export default {
   methods: {
     selectItem(item) {
       this.selectedAlbum = item
-      // console.log(1111, item)
+      console.log("item", item)
       this.cacheAlbum(item)
       this.$router.push({
         path: `/recommend/${item.id}`

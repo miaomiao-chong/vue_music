@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const baseUrl = '/'
+// const baseUrl = '/'
+const baseUrl = process.env.NODE_ENV === 'production' ? "http://47.103.29.206/music" : '/'
 axios.defaults.baseURL = baseUrl
 
 export function get(url, params) {
