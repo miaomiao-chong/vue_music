@@ -8,24 +8,24 @@ const port = process.env.PORT || 9002
 
 const app = express()
 
-const csrfProtection = csrf({
-  cookie: true,
-  ignoreMethods: ['HEAD', 'OPTIONS'],
-  checkPathReg: /^\/api/
-})
-app.use(cookieParser())
-app.use(csrfProtection)
+// const csrfProtection = csrf({
+//   cookie: true,
+//   ignoreMethods: ['HEAD', 'OPTIONS'],
+//   checkPathReg: /^\/api/
+// })
+// app.use(cookieParser())
+// app.use(csrfProtection)
 
 app.get('/', function (req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken())
+  // res.cookie('XSRF-TOKEN', req.csrfToken())
   return next()
 })
 
 registerRouter(app)
 
-app.use(compression())
+// app.use(compression())
 
-app.use(express.static('./dist'))
+app.use(express.static('../dist'))
 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') {

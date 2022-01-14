@@ -11,8 +11,10 @@
     "axios": "^0.21.1",
     "better-scroll": "^2.4.2",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "core-js": "^3.6.5",
     "element-plus": "^1.1.0-beta.24",
+    "express": "4.17.2",
     "less-loader": "^10.2.0",
     "qs": "^6.10.1",
     "throttle-debounce": "^3.0.1",
@@ -38,6 +40,8 @@
     "eslint-plugin-vue": "^7.0.0",
     "node-sass": "^4.12.0",
     "pinyin": "^2.10.2",
-    "sass-loader": "^7.1.0"
+    "sass-loader": "^7.1.0",
+    "xsrf": "^1.0.0",
+    "cookie-parser": "^1.4.5"
   }
 }
