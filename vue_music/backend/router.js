@@ -195,9 +195,10 @@ function registerSingerDetail(app) {
 // 获取歌曲url   可以和获取歌手合并
 function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
-    // console.log(req.body);
+    console.log("req", req);
+    console.log("body", req.body)
     let mid = req.body.mid
-    // console.log("mid", mid)
+    console.log("mid", mid)
     process(mid)
     // console.log("result", result);
     // console.log('获取歌曲url');
