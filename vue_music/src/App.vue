@@ -13,7 +13,6 @@
       </keep-alive>
     </transition>
   </router-view>
-
   <m-player></m-player>
 </template>
 

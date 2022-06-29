@@ -1,9 +1,6 @@
 import axios from 'axios'
 
-// const baseUrl = '/'
-// const baseUrl = process.env.NODE_ENV === 'production' ? "http://127.0.0.1:9002" : '/'
 const baseUrl = process.env.NODE_ENV === 'production' ? "http://47.103.29.206:9002/" : '/'
-// const baseUrl = process.env.NODE_ENV === 'production' ? "http://127.0.0.1:9002/" : '/'
 
 axios.defaults.baseURL = baseUrl
 

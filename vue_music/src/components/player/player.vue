@@ -118,7 +118,7 @@ export default {
       currentLyric: '',
       // 当前播放行数
       currentLineNum: 0,
-      playingLyric: '"此歌曲为没有填词的纯音乐 请欣赏"',
+      playingLyric: '',
       rawLyric: '',
     }
   },
@@ -188,7 +188,7 @@ export default {
       this.stopLyric()
       this.rawLyric = ''
       this.currentLyric = ''
-      this.playingLyric = '此歌曲为没有填词的纯音乐 请欣赏'
+      this.playingLyric = ''
       // 初始化动画是否开始
       // this.startAnimation = false
       this.isShowLyric = false
@@ -219,18 +219,21 @@ export default {
       console.log("实例化了一下")
       this.currentLyric = new Lyric(this.rawLyric, this.handleLyric)
       const hasLyric = this.currentLyric.lines.length
+      console.log("hasLyric", hasLyric);
       if (hasLyric) {
         this.playLyric()
       } else {
         console.log("没有歌词")
-        this.pureMusicLyric = '此歌曲无歌词'
+        this.pureMusicLyric = '暂无歌词'
       }
       if (this.songReady === false) {
+
         this.stopLyric()
       }
       this.$store.commit("setPlayingState", true)
     },
     playing(newPlaying) {
+      console.log("newPlaying", newPlaying);
       if (!this.songReady) {
         return
       }
@@ -240,6 +243,7 @@ export default {
         this.playLyric()
       } else {
         audioEl.pause()
+        this.pureMusicLyric = '暂无音源'
         this.stopLyric()
       }
     },
@@ -637,8 +641,10 @@ export default {
           width: 100%;
           position: absolute;
           bottom: 0;
-
+          overflow: hidden;
           .playing-lyric {
+            white-space: nowrap;
+            text-overflow: ellipsis;
             line-height: 70px;
             height: 100%;
             text-align: center;
@@ -657,7 +663,7 @@ export default {
           height: 100%;
           width: 100%;
           overflow: hidden;
-
+          
           .pure-music {
             padding-top: 50%;
             color: #d1d1e1;

@@ -3,12 +3,10 @@ const CODE_OK = 200
 const axios = require('axios')
 const baseUrl = 'http://47.103.29.206:3000'
 const cookie = 'MUSIC_U=675fb74408213020288a334790de3971b87f628b7d8fb6ae85721bab949eee9c33a649814e309366; Max-Age=1296000; Expires=Tue 9 Feb 2021 07:24:23 GMT; Path=/'
-const LocalUrl = 'http://localhost:8081'
 
 // const baseSongPic = 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg'
 
 function registerRouter(app) {
-  // eslint-disable-next-line no-unused-expressions,no-sequences
   registerbanner(app),
     registerPlayslist(app),
     registerSingerList(app),
@@ -195,10 +193,10 @@ function registerSingerDetail(app) {
 // 获取歌曲url   可以和获取歌手合并
 function registerSongUrl(app) {
   app.post('/api/getSongUrl', async (req, res) => {
-    console.log("req", req);
-    console.log("body", req.body)
+    // console.log("req", req);
+    // console.log("body", req.body)
     let mid = req.body.mid
-    console.log("mid", mid)
+    // console.log("mid", mid)
     process(mid)
     // console.log("result", result);
     // console.log('获取歌曲url');
@@ -212,7 +210,14 @@ function registerSongUrl(app) {
   // 处理返回的id
   function process(info) {
     // console.log("processId :", info[0])
+    let url = `${baseUrl}/check/music`
     for (let i = 0; i < info.length; i++) {
+      // axios.get(url,{id:info[i]}).then((res)=>{
+      //   // 有无版权
+      //   // if(res.data.success){
+
+      //   // }
+      // })
       info[i].url = `https://music.163.com/song/media/outer/url?id=${info[i].id}.mp3`
     }
   }
@@ -357,11 +362,13 @@ function registerOneSong(app) {
     // console.log("id", id)
     console.log(mid)
     const url = `${baseUrl}/song/detail`
+    console.log("url", url);
     axios.get(url, { params }).then((response) => {
       // console.log("songs", response.data)
+      console.log("0000000000",response);
       let songs = response.data.songs
       songs = handleSongList(songs)
-      console.log(songs)
+      // console.log(songs)
       process(songs)
       // console.log(songs2)
       res.json({
